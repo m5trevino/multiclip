@@ -1,0 +1,1630 @@
+# ============================================================
+# MERGED PAYLOAD - 2026-01-05 06:51:34.238117
+# SOURCE: /home/flintx/multiclip
+# ============================================================
+
+# PROJECT MAP:
+# ├── clipboard_dict.json
+# ├── gui/main_window.py
+# ├── multiclip.egg-info/PKG-INFO
+# ├── multiclip.egg-info/SOURCES.txt
+# ├── multiclip.egg-info/dependency_links.txt
+# ├── multiclip.egg-info/requires.txt
+# ├── multiclip.egg-info/top_level.txt
+# ├── multiclip.py
+# ├── multiclip/__init__.py
+# ├── multiclip/core.py
+# ├── multiclip/interfaces/__init__.py
+# ├── multiclip/interfaces/gui.py
+# ├── multiclip/interfaces/hud.py
+# ├── multiclip/modules/__init__.py
+# ├── multiclip/modules/importer.py
+# ├── multiclip/modules/snippets.py
+# ├── multiclip/shared/__init__.py
+# ├── multiclip/shared/notify.py
+# ├── pyproject.toml
+# ├── requirements.txt
+# ├── shared/clipboard_manager.py
+# ├── shared/config_manager.py
+# ├── shared/snippets_manager.py
+
+
+
+# ============================================================
+# FILE: clipboard_dict.json
+# ============================================================
+cat << 'LIMIT' > "clipboard_dict.json"
+{
+    "1": "hkeskes@comcast.net",
+    "2": "Savher01",
+    "3": "hvegholm1@aol.com",
+    "4": "mopar1973",
+    "5": "info@tcparts.com",
+    "6": "Parking1",
+    "7": "megifered@gmail.com",
+    "8": "Libram7",
+    "9": "michaelslavish@gmail.com",
+    "10": "63Stingray",
+    "slot_1": "ARE WE ABLE TO PUT AT THE TOP AND BOTTOM OF THE CHAT LOG A DETAILED REPORT ABOUT WHAT CHAT LOG THIS IS/>\n\nWITH THE COOL ASCII SHIT SEPERATORS ETC\n",
+    "slot_2": "\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\n          THOUGHTS\n\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\n\n\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\n\n\u2583\u2585\u2586\u2588 GEMINI \u2588\u2586\u2585\u2583\n\n\n\nLIKE THIS THO FOO\n\n\u2588\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2588 CODE BLOCK     \u2588\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2588",
+    "slot_3": "\u25cf\u25ac\u25ac\u25ac\u25ac\u0e51 USER \u0e51\u25ac\u25ac\u25ac\u25ac\u25ac\u25cf\n\n\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\n          THOUGHTS\n\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\u2580\u2584\n\n\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\u25b0\u25b1\n\n\u2583\u2585\u2586\u2588 GEMINI \u2588\u2586\u2585\u2583\n\n\n\nLIKE THIS THO FOO\n\n\u2588\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2588 CODE BLOCK     \u2588\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2588",
+    "slot_4": "ARE WE ABLE TO PUT AT THE TOP AND BOTTOM OF THE CHAT LOG A DETAILED REPORT ABOUT WHAT CHAT LOG THIS IS/>\n\nWITH THE COOL ASCII SHIT SEPERATORS ETC",
+    "slot_5": "i dont have a way to view all the prompts in /home/flintx/prompts or use them\n\ni ont even see a way to view a processed chat \nand i dont ee a way for it to download processed chats\n\ni dont see a way for me to batch process.\n\ni dont see a queue of files i procssed from json format to human readable...so i can go through them and send to ai as i please and in what order and how many\n\ni dont see  any function that has a database to handle the chat logs proccced ad chat logs sent to ai ad the responses. \n\ni dont see a way to choose mix and atch thought and chat and user and chatbot and code blocks ",
+    "slot_6": "\ud83d\udc15\u200d\ud83e\uddba \t:service_dog:",
+    "slot_7": "\ud83c\udfaf \t:dart:",
+    "slot_8": "\ud83d\udcbe \t:floppy_disk:",
+    "slot_9": "\ud83d\udcd3 \t:notebook:",
+    "slot_10": "cat << 'EOF' > /home/flintx/.local/bin/merge\n#!/usr/bin/env python3\nimport curses\nimport os\nimport sys\nimport json\nimport subprocess\nfrom pathlib import Path\nfrom datetime import datetime\n\n# \u2500\u2500\u2500 CONFIGURATION \u2500\u2500\u2500\nBLACKLIST_DIRS = {\".venv\", \"venv\", \"env\", \".git\", \"__pycache__\", \"node_modules\", \"dist\", \"build\", \".idea\", \".vscode\", \"dropzone_storage\", \"target\", \"bin\", \"obj\", \"__pypackages__\", \"site-packages\"}\nBLACKLIST_EXT = {\".pyc\", \".o\", \".exe\", \".dll\", \".so\", \".bin\", \".db\", \".sqlite\", \".png\", \".jpg\", \".jpeg\", \".gif\", \".ico\", \".zip\", \".tar\", \".gz\", \".pdf\", \".svg\", \".ttf\", \".woff\", \".woff2\"}\n\nCONFIG_PATH = Path.home() / \".config\" / \"merge_master\" / \"config.json\"\nDEFAULT_OUT = Path.home() / \"merged\"\nBANNER = [\n    \"MERGE MASTER V3.1 | RECONSTRUCTION CORE\",\n    \"=======================================\"\n]\n\nclass FileObj:\n    def __init__(self, path):\n        self.path = path\n        self.rel_path = path\n        self.ext = path.suffix.lower() if path.suffix else \"no_ext\"\n        self.size = path.stat().st_size\n        self.included = False\n\ndef load_config():\n    try: return json.loads(CONFIG_PATH.read_text())\n    except: return {\"presets\": {}, \"ignore\": []}\n\ndef scan_files(root_dir, config):\n    ignore_patterns = config.get(\"ignore\", [])\n    files = []\n    root_path = Path(root_dir).resolve()\n    \n    for p in root_path.rglob(\"*\"):\n        if not p.is_file(): continue\n        if any(part in BLACKLIST_DIRS for part in p.parts): continue\n        if p.suffix.lower() in BLACKLIST_EXT: continue\n        if p.name.startswith(\".\"): continue\n        \n        f_obj = FileObj(p)\n        try: f_obj.rel_path = p.relative_to(root_path)\n        except: f_obj.rel_path = p\n        files.append(f_obj)\n    \n    files.sort(key=lambda x: str(x.rel_path))\n    return files, root_path\n\nclass App:\n    def __init__(self, stdscr):\n        self.stdscr = stdscr\n        self.config = load_config()\n        self.root = Path.cwd()\n        self.files, self.abs_root = scan_files(self.root, self.config)\n        self.presets = self.config.get(\"presets\", {})\n        \n        curses.start_color()\n        curses.use_default_colors()\n        curses.init_pair(1, curses.COLOR_GREEN, -1)\n        curses.init_pair(2, curses.COLOR_CYAN, -1)\n        curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)\n        curses.init_pair(4, curses.COLOR_MAGENTA, -1)\n        curses.init_pair(5, curses.COLOR_YELLOW, -1)\n        \n        self.run_main_menu()\n\n    def run_main_menu(self):\n        opts = [\"PRESET: DEV CORE (Code Only)\", \"PRESET: ALL TEXT\", \"CUSTOM: Select Extensions\", \"EXIT\"]\n        cur = 0\n        while True:\n            self.stdscr.clear()\n            h, w = self.stdscr.getmaxyx()\n            \n            self.stdscr.addstr(1, 2, BANNER[0], curses.color_pair(1) | curses.A_BOLD)\n\n            for i, opt in enumerate(opts):\n                style = curses.color_pair(3) if i == cur else curses.color_pair(1)\n                self.stdscr.addstr(4 + i, 4, f\" {opt} \", style)\n            \n            key = self.stdscr.getch()\n            if key == curses.KEY_UP: cur = (cur - 1) % len(opts)\n            elif key == curses.KEY_DOWN: cur = (cur + 1) % len(opts)\n            elif key == 10:\n                if cur == 0: self.apply_preset(\"dev_core\"); break\n                if cur == 1: self.apply_preset(\"all\"); break\n                if cur == 2: self.run_ext_menu(); break\n                if cur == 3: sys.exit(0)\n\n    def apply_preset(self, name):\n        if name == \"all\":\n            for f in self.files: f.included = True\n        elif name == \"dev_core\":\n            code_exts = {\".py\", \".js\", \".html\", \".css\", \".sh\", \".c\", \".cpp\", \".rs\", \".go\", \".java\", \".md\", \".json\", \".yaml\", \".toml\", \".sql\"}\n            for f in self.files:\n                if f.ext in code_exts: f.included = True\n        self.run_staging()\n\n    def run_ext_menu(self):\n        ext_map = {}\n        for f in self.files: ext_map.setdefault(f.ext, []).append(f)\n        exts = sorted(ext_map.keys())\n        selection = {e: False for e in exts}\n        cur = 0\n        while True:\n            self.stdscr.clear()\n            h, w = self.stdscr.getmaxyx()\n            self.draw_box(0, 0, h-1, w//2 - 1, \"EXTENSIONS (Space: Toggle)\")\n            for i, e in enumerate(exts):\n                if i >= h-4: break\n                mark = \"[x]\" if selection[e] else \"[ ]\"\n                style = curses.color_pair(3) if i == cur else curses.color_pair(1)\n                self.stdscr.addstr(1+i, 2, f\"{mark} {e} ({len(ext_map[e])})\", style)\n            self.draw_box(0, w//2, h-1, w-1, \"PREVIEW\")\n            if exts:\n                curr_ext = exts[cur]\n                for i, f in enumerate(ext_map[curr_ext]):\n                    if i >= h-4: break\n                    self.stdscr.addstr(1+i, w//2 + 2, str(f.rel_path)[:w//2-4], curses.color_pair(5))\n            self.stdscr.addstr(h-1, 2, \"ENTER: Confirm | q: Back\", curses.color_pair(2))\n            key = self.stdscr.getch()\n            if key == curses.KEY_UP: cur = max(0, cur - 1)\n            elif key == curses.KEY_DOWN: cur = min(len(exts) - 1, cur + 1)\n            elif key == ord(' '): selection[exts[cur]] = not selection[exts[cur]]\n            elif key == ord('q'): self.run_main_menu(); return\n            elif key == 10:\n                for e, sel in selection.items():\n                    if sel: \n                        for f in ext_map[e]: f.included = True\n                self.run_staging()\n                return\n\n    def run_staging(self):\n        active_pane = 0; cur_inc = 0; cur_exc = 0\n        while True:\n            self.stdscr.clear()\n            h, w = self.stdscr.getmaxyx()\n            mid = w // 2\n            inc_files = [f for f in self.files if f.included]\n            exc_files = [f for f in self.files if not f.included]\n            \n            style_inc = curses.color_pair(2) | curses.A_BOLD if active_pane == 0 else curses.color_pair(2)\n            style_exc = curses.color_pair(2) | curses.A_BOLD if active_pane == 1 else curses.color_pair(2)\n            \n            self.draw_box(0, 0, h-3, mid-1, f\"INCLUDED ({len(inc_files)})\", style_inc)\n            self.draw_box(0, mid, h-3, w-1, f\"EXCLUDED ({len(exc_files)})\", style_exc)\n            \n            for i, f in enumerate(inc_files):\n                if i >= h-6: break\n                style = curses.color_pair(3) if (active_pane == 0 and i == cur_inc) else curses.color_pair(1)\n                self.stdscr.addstr(1+i, 2, str(f.rel_path)[:mid-4], style)\n            for i, f in enumerate(exc_files):\n                if i >= h-6: break\n                style = curses.color_pair(3) if (active_pane == 1 and i == cur_exc) else curses.color_pair(4)\n                self.stdscr.addstr(1+i, mid+2, str(f.rel_path)[:mid-4], style)\n                \n            status = f\" FILES: {len(inc_files)} \"\n            self.stdscr.addstr(h-2, (w-len(status))//2, status, curses.color_pair(3))\n            self.stdscr.addstr(h-1, 2, \"[TAB] Switch [SPACE] Toggle [ENTER] GENERATE\", curses.color_pair(5))\n            \n            key = self.stdscr.getch()\n            if key == 9: active_pane = 1 - active_pane\n            elif key == curses.KEY_UP:\n                if active_pane == 0: cur_inc = max(0, cur_inc - 1)\n                else: cur_exc = max(0, cur_exc - 1)\n            elif key == curses.KEY_DOWN:\n                if active_pane == 0: cur_inc = min(len(inc_files)-1, cur_inc + 1)\n                else: cur_exc = min(len(exc_files)-1, cur_exc + 1)\n            elif key == ord(' '):\n                if active_pane == 0 and inc_files:\n                    inc_files[cur_inc].included = False\n                    cur_inc = max(0, cur_inc - 1)\n                elif active_pane == 1 and exc_files:\n                    exc_files[cur_exc].included = True\n                    cur_exc = max(0, cur_exc - 1)\n            elif key == 10:\n                if not inc_files: continue\n                self.run_finalize(inc_files)\n                return\n\n    def run_finalize(self, final_files):\n        ts = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n        def_name = f\"merged_payload_{ts}.txt\"\n        \n        # Generation Logic\n        sep = \"=\" * 60\n        tree = get_tree_diagram(final_files)\n        \n        full_content = []\n        full_content.append(f\"# {sep}\")\n        full_content.append(f\"# MERGED PAYLOAD - {datetime.now()}\")\n        full_content.append(f\"# SOURCE: {self.abs_root}\")\n        full_content.append(f\"# {sep}\\n\")\n        full_content.append(tree)\n        full_content.append(\"\\n\")\n        \n        for f in final_files:\n            try:\n                try: text = f.path.read_text(encoding='utf-8')\n                except: text = f.path.read_bytes().decode('latin-1', errors='replace')\n                \n                delimiter = \"EOF\"\n                if \"EOF\" in text: delimiter = \"LIMIT\"\n                \n                full_content.append(f\"# {sep}\")\n                full_content.append(f\"# FILE: {f.rel_path}\")\n                full_content.append(f\"# {sep}\")\n                \n                dir_name = f.rel_path.parent\n                if str(dir_name) != \".\":\n                    full_content.append(f\"mkdir -p \\\"{dir_name}\\\"\")\n                \n                full_content.append(f\"cat << '{delimiter}' > \\\"{f.rel_path}\\\"\")\n                full_content.append(text)\n                full_content.append(f\"{delimiter}\\n\")\n            except Exception as e:\n                full_content.append(f\"# ERROR: {e}\\n\")\n        \n        final_str = \"\\n\".join(full_content)\n        \n        # Save\n        DEFAULT_OUT.mkdir(parents=True, exist_ok=True)\n        final_file = DEFAULT_OUT / def_name\n        final_file.write_text(final_str, encoding='utf-8')\n        \n        # Clipboard\n        try:\n            p = subprocess.Popen(['xclip', '-selection', 'clipboard'], stdin=subprocess.PIPE)\n            p.communicate(input=final_str.encode('utf-8'))\n        except: pass\n            \n        sys.exit(0)\n\n    def draw_box(self, y1, x1, y2, x2, title, color=None):\n        if color is None: color = curses.color_pair(2)\n        try:\n            self.stdscr.vline(y1+1, x1, curses.ACS_VLINE, y2-y1-1, color)\n            self.stdscr.vline(y1+1, x2, curses.ACS_VLINE, y2-y1-1, color)\n            self.stdscr.hline(y1, x1+1, curses.ACS_HLINE, x2-x1-1, color)\n            self.stdscr.hline(y2, x1+1, curses.ACS_HLINE, x2-x1-1, color)\n            if title: self.stdscr.addstr(y1, x1+2, f\" {title} \", color | curses.A_BOLD)\n        except: pass\n\ndef main(stdscr):\n    curses.curs_set(0)\n    App(stdscr)\n\nif __name__ == \"__main__\":\n    curses.wrapper(main)\nEOF\nchmod +x /home/flintx/.local/bin/merge\n\u26a1 DROP\necho -e \"\\033[1;92m[+] DROP SECURED:\\033[0m \\033[1;96mscript_1765628592.py\\033[0m\"\n"
+}
+LIMIT
+
+# ============================================================
+# FILE: gui/main_window.py
+# ============================================================
+mkdir -p "gui"
+cat << 'EOF' > "gui/main_window.py"
+import tkinter as tk
+from tkinter import ttk
+
+class MainWindow:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("MultiClip")
+        self.root.geometry("600x500")
+        
+        self.clipboard_manager = None
+        self.slot_select_callback = None
+        self.mode_change_callback = None
+        
+        self.slots = []
+        self._setup_ui()
+        
+    def _setup_ui(self):
+        # Mode Selector
+        mode_frame = ttk.LabelFrame(self.root, text="Mode Selection")
+        mode_frame.pack(fill="x", padx=5, pady=5)
+        
+        self.mode_var = tk.StringVar(value="MultiClip")
+        
+        modes = [("Standard MultiClip", "MultiClip"), ("Orderly (Sequential)", "Orderly")]
+        
+        for text, mode in modes:
+            rb = ttk.Radiobutton(mode_frame, text=text, variable=self.mode_var, 
+                               value=mode, command=self._on_mode_change)
+            rb.pack(side="left", padx=10)
+
+        # Slots Display
+        slots_frame = ttk.LabelFrame(self.root, text="Clipboard Slots")
+        slots_frame.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        canvas = tk.Canvas(slots_frame)
+        scrollbar = ttk.Scrollbar(slots_frame, orient="vertical", command=canvas.yview)
+        self.scrollable_frame = ttk.Frame(canvas)
+        
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        
+        # Initialize 10 slots
+        for i in range(10):
+            frame = ttk.Frame(self.scrollable_frame)
+            frame.pack(fill="x", pady=2)
+            
+            btn = ttk.Button(frame, text=f"Slot {i+1}", width=10,
+                           command=lambda idx=i: self._on_slot_click(idx))
+            btn.pack(side="left", padx=5)
+            
+            lbl = ttk.Label(frame, text="<Empty>", anchor="w")
+            lbl.pack(side="left", fill="x", expand=True)
+            
+            self.slots.append(lbl)
+
+    def set_clipboard_manager(self, manager):
+        self.clipboard_manager = manager
+        
+    def set_slot_select_callback(self, callback):
+        self.slot_select_callback = callback
+        
+    def set_mode_change_callback(self, callback):
+        self.mode_change_callback = callback
+        
+    def update_slot(self, slot_id, full_text, preview):
+        if 0 <= slot_id < len(self.slots):
+            self.slots[slot_id].config(text=preview)
+            
+    def _on_slot_click(self, slot_index):
+        # Convert 0-based index back to 1-based for callback if needed, 
+        # but manager usually expects 0-based. multiclip.py expects 0-based.
+        if self.slot_select_callback:
+            self.slot_select_callback(slot_index)
+            
+    def _on_mode_change(self):
+        if self.mode_change_callback:
+            self.mode_change_callback(self.mode_var.get())
+
+    def run(self):
+        self.root.mainloop()
+
+EOF
+
+# ============================================================
+# FILE: multiclip.egg-info/PKG-INFO
+# ============================================================
+mkdir -p "multiclip.egg-info"
+cat << 'EOF' > "multiclip.egg-info/PKG-INFO"
+Metadata-Version: 2.4
+Name: multiclip
+Version: 2.2.0
+Summary: The Arsenal
+Requires-Dist: keyboard
+Requires-Dist: pyperclip
+Requires-Dist: pyautogui
+Requires-Dist: pynput
+Requires-Dist: plyer
+
+EOF
+
+# ============================================================
+# FILE: multiclip.egg-info/SOURCES.txt
+# ============================================================
+mkdir -p "multiclip.egg-info"
+cat << 'EOF' > "multiclip.egg-info/SOURCES.txt"
+pyproject.toml
+gui/main_window.py
+multiclip/__init__.py
+multiclip.egg-info/PKG-INFO
+multiclip.egg-info/SOURCES.txt
+multiclip.egg-info/dependency_links.txt
+multiclip.egg-info/requires.txt
+multiclip.egg-info/top_level.txt
+multiclip/interfaces/__init__.py
+multiclip/interfaces/gui.py
+multiclip/interfaces/hud.py
+multiclip/modules/__init__.py
+multiclip/modules/importer.py
+multiclip/modules/snippets.py
+multiclip/shared/__init__.py
+multiclip/shared/notify.py
+shared/clipboard_manager.py
+shared/config_manager.py
+shared/snippets_manager.py
+EOF
+
+# ============================================================
+# FILE: multiclip.egg-info/dependency_links.txt
+# ============================================================
+mkdir -p "multiclip.egg-info"
+cat << 'EOF' > "multiclip.egg-info/dependency_links.txt"
+
+
+EOF
+
+# ============================================================
+# FILE: multiclip.egg-info/requires.txt
+# ============================================================
+mkdir -p "multiclip.egg-info"
+cat << 'EOF' > "multiclip.egg-info/requires.txt"
+keyboard
+pyperclip
+pyautogui
+pynput
+plyer
+
+EOF
+
+# ============================================================
+# FILE: multiclip.egg-info/top_level.txt
+# ============================================================
+mkdir -p "multiclip.egg-info"
+cat << 'EOF' > "multiclip.egg-info/top_level.txt"
+gui
+multiclip
+shared
+venv
+
+EOF
+
+# ============================================================
+# FILE: multiclip.py
+# ============================================================
+cat << 'EOF' > "multiclip.py"
+import pyperclip
+import keyboard
+import json
+import os
+import pyautogui
+import subprocess
+import time
+import tkinter as tk
+from tkinter import ttk
+import threading
+from gui.main_window import MainWindow
+from shared.clipboard_manager import ClipboardManager
+
+class MultiClipSystem:
+    def __init__(self):
+        # Paths
+        self.dict_file = "/home/flintx/multiclip/clipboard_dict.json"
+        self.icon_path = "/home/flintx/multiclip/chargers.png"
+        
+        # Initialize managers
+        self.clipboard_manager = ClipboardManager(num_slots=10)
+        self.clipboard_slots = self.load_dictionary()
+        
+        # Mode management
+        self.current_mode = "MultiClip"
+        
+        # Setup UI
+        self.main_window = MainWindow()
+        self.main_window.set_clipboard_manager(self.clipboard_manager)
+        self._setup_callbacks()
+        self.register_hotkeys()
+        
+        # Load existing clipboard data into manager
+        self._sync_clipboard_data()
+        
+    def _setup_callbacks(self):
+        """Setup callbacks between UI and system"""
+        self.main_window.set_slot_select_callback(self._on_slot_select)
+        self.main_window.set_mode_change_callback(self._on_mode_change)
+    
+    def _sync_clipboard_data(self):
+        """Sync existing clipboard data with the clipboard manager"""
+        for i in range(10):
+            slot_key = f"slot_{i+1}"
+            if slot_key in self.clipboard_slots:
+                content = self.clipboard_slots[slot_key]
+                self.clipboard_manager.store_in_slot(i, content)
+                preview = content[:50] + "..." if len(content) > 50 else content
+                self.main_window.update_slot(i, content, preview)
+    
+    def _on_slot_select(self, slot_id: int):
+        """Handle slot selection from UI"""
+        content = self.clipboard_manager.get_slot_content(slot_id)
+        if content:
+            pyperclip.copy(content)
+            self.show_toast("Slot Copied", f"Slot {slot_id} copied to clipboard")
+    
+    def _on_mode_change(self, new_mode: str):
+        """Handle mode change from UI"""
+        self.current_mode = new_mode
+        self.show_toast(f"{new_mode} Mode", f"{new_mode} mode activated")
+    
+    def load_dictionary(self):
+        """Load clipboard slots from file"""
+        if os.path.exists(self.dict_file):
+            with open(self.dict_file, "r") as file:
+                return json.load(file)
+        else:
+            return {f"slot_{i}": "" for i in range(1, 16)}
+    
+    def save_dictionary(self):
+        """Save clipboard slots to file"""
+        with open(self.dict_file, "w") as file:
+            json.dump(self.clipboard_slots, file, indent=4)
+    
+    def show_toast(self, title, message):
+        """Show system notification with custom icon"""
+        try:
+            subprocess.run([
+                "notify-send", 
+                "-i", self.icon_path, 
+                title, 
+                message, 
+                "-t", "3000"
+            ], check=False)
+        except Exception as e:
+            print(f"Toast notification error: {e}")
+    
+    def add_to_slot(self, slot_num):
+        """Copy selected content to clipboard slot"""
+        try:
+            # Use your working method: simulate Ctrl+C first
+            pyautogui.hotkey("ctrl", "c")
+            time.sleep(0.1)  # Give it time to copy
+            
+            # Get the copied content
+            clipboard_content = pyperclip.paste()
+            
+            # Normal multiclip mode
+            actual_slot = slot_num - 1  # Convert to 0-based
+            slot_key = f"slot_{slot_num}"
+            
+            self.clipboard_slots[slot_key] = clipboard_content
+            self.clipboard_manager.store_in_slot(actual_slot, clipboard_content)
+            self.save_dictionary()
+            
+            # Update UI
+            preview = clipboard_content[:50] + "..." if len(clipboard_content) > 50 else clipboard_content
+            self.main_window.update_slot(actual_slot, clipboard_content, preview)
+            
+            self.show_toast("Slot Updated", f"Slot {slot_num} updated")
+            
+        except Exception as e:
+            self.show_toast("Copy Error", str(e))
+    
+    def paste_from_slot(self, slot_num):
+        """Paste content from clipboard slot"""
+        try:
+            actual_slot = slot_num - 1  # Convert to 0-based
+            content = self.clipboard_manager.get_slot_content(actual_slot)
+            
+            if content:
+                pyperclip.copy(content)
+                time.sleep(0.1)
+                pyautogui.hotkey("ctrl", "v")
+                
+                self.show_toast("Slot Pasted", f"Slot {slot_num} content pasted")
+            else:
+                self.show_toast("Slot Empty", f"No content in slot {slot_num}")
+                
+        except Exception as e:
+            self.show_toast("Paste Error", str(e))
+    
+    def transfer_to_default(self, slot_num):
+        """Transfer slot content to default clipboard"""
+        try:
+            actual_slot = slot_num - 1  # Convert to 0-based
+            content = self.clipboard_manager.get_slot_content(actual_slot)
+            
+            if content:
+                pyperclip.copy(content)
+                self.show_toast("Slot Transferred", f"Slot {slot_num} transferred to clipboard")
+            else:
+                self.show_toast("Slot Empty", f"No content in slot {slot_num}")
+                
+        except Exception as e:
+            self.show_toast("Transfer Error", str(e))
+    
+    def register_hotkeys(self):
+        """Register all hotkeys"""
+        def hotkey_thread():
+            try:
+                # Copy hotkeys (Ctrl + 1-9)
+                for i in range(1, 10):
+                    keyboard.add_hotkey(f"ctrl+{i}", self.add_to_slot, args=[i])
+                
+                # Paste hotkeys (Ctrl + Shift + 1-9)
+                for i in range(1, 10):
+                    keyboard.add_hotkey(f"ctrl+shift+{i}", self.paste_from_slot, args=[i])
+                
+                # Transfer hotkeys (Ctrl + Alt + 1-9)
+                for i in range(1, 10):
+                    keyboard.add_hotkey(f"ctrl+alt+{i}", self.transfer_to_default, args=[i])
+                
+                print("All hotkeys registered successfully!")
+                
+            except Exception as e:
+                print(f"Hotkey registration error: {e}")
+        
+        # Start hotkeys in background thread
+        threading.Thread(target=hotkey_thread, daemon=True).start()
+    
+    def run(self):
+        """Start the application"""
+        self.show_toast("MultiClip Started", "System Ready")
+        self.main_window.run()
+
+if __name__ == "__main__":
+    app = MultiClipSystem()
+    app.run()
+
+EOF
+
+# ============================================================
+# FILE: multiclip/__init__.py
+# ============================================================
+mkdir -p "multiclip"
+cat << 'EOF' > "multiclip/__init__.py"
+
+EOF
+
+# ============================================================
+# FILE: multiclip/core.py
+# ============================================================
+mkdir -p "multiclip"
+cat << 'EOF' > "multiclip/core.py"
+import pyperclip
+import pyautogui
+import time
+import json
+import os
+from pathlib import Path
+
+class MultiClipCore:
+    def __init__(self, slots_file="clipboard_dict.json", max_slots=10):
+        self.max_slots = max_slots
+        # Ensure we look in the project root for the json (one level up from this file)
+        self.slots_file = Path(__file__).parent.parent / slots_file
+        self.slots = self._load_slots()
+        self.paste_order = list(range(1, max_slots + 1))
+        
+        # SEQUENTIAL STATE
+        self.current_seq_slot = 1
+
+    def _load_slots(self):
+        if self.slots_file.exists():
+            try:
+                with open(self.slots_file) as f:
+                    data = json.load(f)
+                    # Clean data to ensure int keys
+                    clean_data = {}
+                    for k, v in data.items():
+                        if str(k).isdigit():
+                            clean_data[int(k)] = v
+                        elif k.startswith("slot_"):
+                            try:
+                                idx = int(k.split("_")[1])
+                                clean_data[idx] = v
+                            except: pass
+                    return clean_data
+            except:
+                pass
+        return {i: "" for i in range(1, self.max_slots + 1)}
+
+    def _save_slots(self):
+        with open(self.slots_file, "w") as f:
+            json.dump(self.slots, f, indent=2)
+
+    def _release_modifiers(self):
+        """Force release keys to prevent signal pollution (Ghost Keys)"""
+        try:
+            pyautogui.keyUp('shift')
+            pyautogui.keyUp('alt')
+            pyautogui.keyUp('ctrl')
+        except: pass
+        time.sleep(0.05)
+
+    def copy_to_slot(self, slot: int):
+        if not (1 <= slot <= self.max_slots): return None
+        
+        self._release_modifiers()
+
+        # Send Copy
+        try:
+            os.system("xdotool key --clearmodifiers ctrl+c")
+        except:
+            pyautogui.hotkey("ctrl", "c")
+            
+        time.sleep(0.2)
+        text = pyperclip.paste()
+        
+        if text:
+            self.slots[slot] = text
+            self._save_slots()
+            print(f"[DEBUG] Copied to Slot {slot}")
+            return text
+        return None
+
+    def paste_from_slot(self, slot: int):
+        if not (1 <= slot <= self.max_slots): return
+        text = self.slots.get(slot, "")
+        if not text: return
+        
+        pyperclip.copy(text)
+        time.sleep(0.1)
+        
+        self._release_modifiers()
+
+        # Send Paste
+        try:
+            os.system("xdotool key --clearmodifiers ctrl+v")
+        except:
+            pyautogui.hotkey("ctrl", "v")
+
+    # --- SEQUENTIAL LOGIC ---
+    def sequential_copy(self):
+        text = self.copy_to_slot(self.current_seq_slot)
+        used_slot = self.current_seq_slot
+        if text:
+            self.current_seq_slot += 1
+            if self.current_seq_slot > self.max_slots:
+                self.current_seq_slot = 1
+        return used_slot, text
+
+    def sequential_paste(self):
+        # 0-based index for paste_order list
+        idx = self.current_seq_slot - 1
+        actual_slot = self.paste_order[idx]
+        
+        self.paste_from_slot(actual_slot)
+        
+        self.current_seq_slot += 1
+        if self.current_seq_slot > self.max_slots:
+            self.current_seq_slot = 1
+        return actual_slot
+
+    def clear_all(self):
+        self.slots = {i: "" for i in range(1, self.max_slots + 1)}
+        self._save_slots()
+        self.current_seq_slot = 1
+
+EOF
+
+# ============================================================
+# FILE: multiclip/interfaces/__init__.py
+# ============================================================
+mkdir -p "multiclip/interfaces"
+cat << 'EOF' > "multiclip/interfaces/__init__.py"
+
+EOF
+
+# ============================================================
+# FILE: multiclip/interfaces/gui.py
+# ============================================================
+mkdir -p "multiclip/interfaces"
+cat << 'EOF' > "multiclip/interfaces/gui.py"
+import tkinter as tk
+from tkinter import ttk, messagebox, simpledialog, filedialog
+import pyperclip
+import keyboard
+from multiclip.core import MultiClipCore
+from multiclip.shared.notify import toast
+from multiclip.modules.importer import ClipImporter
+from multiclip.modules.snippets import SnippetManager
+from multiclip.interfaces.hud import HudWindow
+from pathlib import Path
+import threading
+
+class MultiClipGUI:
+    def __init__(self):
+        self.core = MultiClipCore()
+        self.snippets = SnippetManager()
+        self.root = tk.Tk()
+        self.root.title("MultiClip 2.2 - The Arsenal")
+        
+        icon_path = Path(__file__).parent.parent.parent / "assets/icons/multiclip.png"
+        if icon_path.exists():
+            self.root.iconphoto(True, tk.PhotoImage(file=icon_path))
+
+        self.hud = None 
+        self.build_ui()
+        self.refresh_slots()
+        
+        # Start the heavy keyboard hooks
+        self._start_hotkeys()
+
+    # --- HOTKEYS (THE ROOT LOGIC) ---
+    def _start_hotkeys(self):
+        # Clean slate
+        try: keyboard.unhook_all()
+        except: pass
+
+        # Classic 1-10
+        for i in range(1, 11):
+            key = str(i) if i < 10 else '0'
+            # suppress=True stops the key from reaching the OS (prevents typing '!')
+            keyboard.add_hotkey(f'ctrl+shift+{key}', lambda s=i: self.on_copy(s), suppress=True)
+            keyboard.add_hotkey(f'ctrl+alt+{key}', lambda s=i: self.on_paste(s), suppress=True)
+
+        # Sequential Master Keys
+        keyboard.add_hotkey('ctrl+shift+space', self.on_seq_copy, suppress=True)
+        keyboard.add_hotkey('ctrl+alt+space', self.on_seq_paste, suppress=True)
+        
+        # SMART INGEST (Ctrl+Shift+L)
+        keyboard.add_hotkey('ctrl+shift+l', self.smart_ingest_clipboard, suppress=True)
+
+    # --- ACTIONS ---
+    def on_copy(self, slot):
+        if self.mode_var.get() == "classic":
+            # Threading ensures GUI doesn't freeze while xdotool runs
+            threading.Thread(target=self._copy_thread, args=(slot,)).start()
+
+    def _copy_thread(self, slot):
+        self.core.copy_to_slot(slot)
+        self.root.after(0, self.refresh_ui)
+        self.root.after(0, lambda: toast("Locked", f"Slot {slot}"))
+
+    def on_paste(self, slot):
+        if self.mode_var.get() == "classic":
+            threading.Thread(target=self._paste_thread, args=(slot,)).start()
+
+    def _paste_thread(self, slot):
+        self.core.paste_from_slot(slot)
+        self.root.after(0, lambda: toast("Sent", f"Slot {slot}"))
+
+    def on_seq_copy(self):
+        if self.mode_var.get() == "sequential":
+            threading.Thread(target=self._seq_copy_thread).start()
+
+    def _seq_copy_thread(self):
+        slot, _ = self.core.sequential_copy()
+        self.root.after(0, self.refresh_ui)
+        self.root.after(0, lambda: toast("Seq Copy", f"Saved Slot {slot}"))
+
+    def on_seq_paste(self):
+        if self.mode_var.get() == "sequential":
+            threading.Thread(target=self._seq_paste_thread).start()
+
+    def _seq_paste_thread(self):
+        slot = self.core.sequential_paste()
+        self.root.after(0, self.refresh_ui)
+        self.root.after(0, lambda: toast("Seq Paste", f"Pasted Slot {slot}"))
+
+    def smart_ingest_clipboard(self):
+        # This one is fast, can run on main thread or simple thread
+        threading.Thread(target=self._ingest_thread).start()
+
+    def _ingest_thread(self):
+        content = pyperclip.paste()
+        if not content: return
+        
+        items = ClipImporter.smart_parse(content)
+        if items:
+            for i, text in enumerate(items):
+                self.core.slots[i+1] = text
+            self.core._save_slots()
+            self.core.current_seq_slot = 1
+            
+            self.root.after(0, lambda: self.mode_var.set("sequential"))
+            self.root.after(0, self.refresh_ui)
+            # Check HUD in thread-safe way
+            self.root.after(0, self._check_toggle_hud)
+            
+            self.root.after(0, lambda: toast("Smart Ingest", f"Parsed {len(items)} items"))
+
+    def _check_toggle_hud(self):
+        if not self.hud: self.toggle_hud()
+
+    # --- UI BUILDER ---
+    def build_ui(self):
+        # MENUBAR
+        menubar = tk.Menu(self.root)
+        self.root.config(menu=menubar)
+        
+        # Snippets Menu
+        self.snip_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Snippets / Stash", menu=self.snip_menu)
+        self.refresh_snippets_menu()
+
+        # Tools Menu
+        tools_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Tools", menu=tools_menu)
+        tools_menu.add_command(label="Manual Data Import", command=self.open_manual_import)
+        
+        # Main Controls
+        ctrl_frame = tk.Frame(self.root); ctrl_frame.pack(pady=5, fill="x", padx=10)
+        
+        tk.Label(ctrl_frame, text="Mode:").pack(side=tk.LEFT)
+        self.mode_var = tk.StringVar(value="classic")
+        tk.Radiobutton(ctrl_frame, text="Classic", variable=self.mode_var, value="classic").pack(side=tk.LEFT, padx=5)
+        tk.Radiobutton(ctrl_frame, text="Sequential", variable=self.mode_var, value="sequential").pack(side=tk.LEFT, padx=5)
+        
+        tk.Button(ctrl_frame, text="HUD", command=self.toggle_hud, bg="#222", fg="white").pack(side=tk.RIGHT)
+
+        # Treeview
+        cols = ("Slot", "Preview")
+        self.tree = ttk.Treeview(self.root, columns=cols, show="headings", height=10)
+        self.tree.heading("Slot", text="Slot"); self.tree.heading("Preview", text="Preview")
+        self.tree.column("Slot", width=50, anchor="center"); self.tree.column("Preview", width=550)
+        self.tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        
+        # Right Click Menu for Slots
+        self.context_menu = tk.Menu(self.root, tearoff=0)
+        self.context_menu.add_command(label="Add to Snippets", command=self.save_slot_to_snippets)
+        self.tree.bind("<Button-3>", self.show_context_menu)
+
+        # Bottom
+        btn_frame = tk.Frame(self.root); btn_frame.pack(pady=10)
+        tk.Button(btn_frame, text="Clear All", command=self.clear_all).pack(side=tk.LEFT)
+
+    # --- SNIPPETS LOGIC ---
+    def refresh_snippets_menu(self):
+        self.snip_menu.delete(0, tk.END)
+        self.snip_menu.add_command(label="+ Add New Snippet", command=self.add_manual_snippet)
+        self.snip_menu.add_separator()
+        for label, content in self.snippets.snippets.items():
+            # Click to copy to clipboard
+            self.snip_menu.add_command(label=label, command=lambda c=content, l=label: self.use_snippet(c, l))
+
+    def use_snippet(self, content, label):
+        pyperclip.copy(content)
+        toast("Snippet Copied", f"Loaded: {label}")
+
+    def add_manual_snippet(self):
+        key = simpledialog.askstring("New Snippet", "Name:")
+        val = simpledialog.askstring("New Snippet", "Content:")
+        if key and val:
+            self.snippets.add(key, val)
+            self.refresh_snippets_menu()
+
+    def save_slot_to_snippets(self):
+        sel = self.tree.selection()
+        if not sel: return
+        item = self.tree.item(sel[0])
+        slot_str = item['values'][0].replace(" ▶", "")
+        real_text = self.core.slots.get(int(slot_str), "")
+        
+        key = simpledialog.askstring("Stash It", "Snippet Name:")
+        if key:
+            self.snippets.add(key, real_text)
+            self.refresh_snippets_menu()
+            toast("Stashed", f"Saved to snippets")
+
+    def show_context_menu(self, event):
+        self.context_menu.tk_popup(event.x_root, event.y_root)
+
+    # --- MANUAL IMPORT WINDOW ---
+    def open_manual_import(self):
+        win = tk.Toplevel(self.root)
+        win.title("Raw Data Ingest")
+        win.geometry("400x300")
+        
+        tk.Label(win, text="Paste Data Here:").pack()
+        txt = tk.Text(win, height=10); txt.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        def run_parse():
+            raw = txt.get("1.0", tk.END)
+            items = ClipImporter.smart_parse(raw)
+            if items:
+                for i, t in enumerate(items): self.core.slots[i+1] = t
+                self.core._save_slots()
+                self.core.current_seq_slot = 1
+                self.refresh_ui()
+                toast("Ingest", f"Loaded {len(items)} items")
+                win.destroy()
+                
+        tk.Button(win, text="Process Data", command=run_parse).pack(pady=5)
+
+    # --- UTILS ---
+    def toggle_hud(self):
+        if self.hud:
+            self.hud.window.destroy(); self.hud = None
+        else:
+            self.hud = HudWindow(self.root)
+            self.update_hud()
+
+    def update_hud(self):
+        if self.hud: self.hud.update_view(self.core.current_seq_slot, self.core.slots)
+
+    def refresh_ui(self):
+        self.refresh_slots()
+        self.update_hud()
+
+    def refresh_slots(self):
+        for item in self.tree.get_children(): self.tree.delete(item)
+        for slot in range(1, 11):
+            text = self.core.slots.get(slot, "")
+            preview = (text[:70] + "...") if len(text) > 70 else text.replace("\n", " ")
+            display_slot = str(slot)
+            if self.mode_var.get() == "sequential" and slot == self.core.current_seq_slot:
+                display_slot += " ▶"
+            self.tree.insert("", "end", values=(display_slot, preview))
+
+    def clear_all(self):
+        if messagebox.askyesno("Clear", "Wipe slots?"):
+            self.core.clear_all()
+            self.refresh_ui()
+
+    def run(self):
+        self.root.geometry("650x450")
+        self.root.mainloop()
+
+if __name__ == "__main__":
+    MultiClipGUI().run()
+
+EOF
+
+# ============================================================
+# FILE: multiclip/interfaces/hud.py
+# ============================================================
+mkdir -p "multiclip/interfaces"
+cat << 'EOF' > "multiclip/interfaces/hud.py"
+import tkinter as tk
+
+class HudWindow:
+    def __init__(self, root):
+        self.window = tk.Toplevel(root)
+        self.window.overrideredirect(True)  # No borders
+        self.window.attributes('-topmost', True) # Always on top
+        self.window.attributes('-alpha', 0.85)   # Slight transparency
+        self.window.geometry("250x130+50+50")    # Size + Position
+        self.window.configure(bg="#1e1e1e")
+
+        # Drag logic
+        self.window.bind('<Button-1>', self.start_move)
+        self.window.bind('<B1-Motion>', self.do_move)
+
+        # Labels
+        self.title = tk.Label(self.window, text=":: SEQUENCE HUD ::", bg="#1e1e1e", fg="#00ff00", font=("Consolas", 8))
+        self.title.pack(pady=2)
+
+        # The "Reel"
+        self.slots_labels = []
+        for i in range(3):
+            lbl = tk.Label(self.window, text="---", bg="#1e1e1e", fg="white", font=("Consolas", 10), anchor="w")
+            lbl.pack(fill="x", padx=5)
+            self.slots_labels.append(lbl)
+
+        self.x = 0
+        self.y = 0
+
+    def start_move(self, event):
+        self.x = event.x
+        self.y = event.y
+
+    def do_move(self, event):
+        deltax = event.x - self.x
+        deltay = event.y - self.y
+        x = self.window.winfo_x() + deltax
+        y = self.window.winfo_y() + deltay
+        self.window.geometry(f"+{x}+{y}")
+
+    def update_view(self, current_idx: int, slots: dict):
+        # Logic: Show Current, Next, and Next+1
+        # current_idx is 1-based (1-10)
+        
+        indices_to_show = [current_idx, (current_idx % 10) + 1, ((current_idx + 1) % 10) + 1]
+        
+        for i, slot_num in enumerate(indices_to_show):
+            text = slots.get(slot_num, "")
+            display_text = text[:25] + "..." if len(text) > 25 else text or "<EMPTY>"
+            
+            label = self.slots_labels[i]
+            
+            if i == 0: # The "Live" Chamber
+                label.config(text=f"[{slot_num}] >> {display_text}", fg="#00ff00", font=("Consolas", 11, "bold"))
+            else: # On Deck
+                label.config(text=f"[{slot_num}]    {display_text}", fg="#888888", font=("Consolas", 10))
+
+EOF
+
+# ============================================================
+# FILE: multiclip/modules/__init__.py
+# ============================================================
+mkdir -p "multiclip/modules"
+cat << 'EOF' > "multiclip/modules/__init__.py"
+
+EOF
+
+# ============================================================
+# FILE: multiclip/modules/importer.py
+# ============================================================
+mkdir -p "multiclip/modules"
+cat << 'EOF' > "multiclip/modules/importer.py"
+import os
+
+class ClipImporter:
+    @staticmethod
+    def smart_parse(text: str) -> list:
+        """
+        Scans text. The first char that is NOT alphanumeric AND NOT a period (.)
+        becomes the delimiter.
+        """
+        if not text: return []
+        
+        delimiter = None
+        
+        # 1. Find the delimiter
+        for char in text:
+            if not char.isalnum() and char != '.':
+                delimiter = char
+                break
+        
+        items = []
+        if delimiter:
+            # Split by found delimiter
+            print(f"[Smart Parser] Detected delimiter: '{delimiter}'")
+            items = [item.strip() for item in text.split(delimiter) if item.strip()]
+        else:
+            # Fallback: Split by newlines if no weird chars found
+            items = [line.strip() for line in text.splitlines() if line.strip()]
+            
+        return items[:10] # Return max 10
+
+    @staticmethod
+    def parse_file(filepath: str) -> list:
+        if not os.path.exists(filepath): return []
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            # Default file import uses newlines
+            return [line.strip() for line in content.splitlines() if line.strip()][:10]
+        except Exception as e:
+            print(f"[Import Error] {e}")
+            return []
+
+EOF
+
+# ============================================================
+# FILE: multiclip/modules/snippets.py
+# ============================================================
+mkdir -p "multiclip/modules"
+cat << 'EOF' > "multiclip/modules/snippets.py"
+import json
+from pathlib import Path
+
+class SnippetManager:
+    def __init__(self, filename="snippets.json"):
+        self.file = Path(__file__).parent.parent.parent / filename
+        self.snippets = self._load()
+
+    def _load(self):
+        if self.file.exists():
+            try:
+                with open(self.file, 'r') as f:
+                    return json.load(f)
+            except: pass
+        # Default seed data
+        return {"Name": "Matthew Trevino", "Email": "mtrevino1983@gmail.com"}
+
+    def save(self):
+        with open(self.file, 'w') as f:
+            json.dump(self.snippets, f, indent=2)
+
+    def add(self, key, value):
+        self.snippets[key] = value
+        self.save()
+
+    def delete(self, key):
+        if key in self.snippets:
+            del self.snippets[key]
+            self.save()
+
+EOF
+
+# ============================================================
+# FILE: multiclip/shared/__init__.py
+# ============================================================
+mkdir -p "multiclip/shared"
+cat << 'EOF' > "multiclip/shared/__init__.py"
+
+EOF
+
+# ============================================================
+# FILE: multiclip/shared/notify.py
+# ============================================================
+mkdir -p "multiclip/shared"
+cat << 'EOF' > "multiclip/shared/notify.py"
+import tkinter as tk
+import threading
+
+class ToastManager:
+    @staticmethod
+    def show(title, message, duration=1500):
+        try:
+            ToastWindow(title, message, duration)
+        except:
+            pass
+
+class ToastWindow:
+    def __init__(self, title, message, duration):
+        self.root = tk.Toplevel()
+        self.root.overrideredirect(True)
+        self.root.attributes('-topmost', True)
+        self.root.configure(bg="#1e1e1e", highlightthickness=1, highlightbackground="#00ff00")
+        
+        # Position: Top Right, slightly down
+        screen_w = self.root.winfo_screenwidth()
+        self.root.geometry(f"300x60+{screen_w - 320}+50")
+        
+        # Content
+        tk.Label(self.root, text=title, fg="#00ff00", bg="#1e1e1e", font=("Consolas", 10, "bold"), anchor="w").pack(fill="x", padx=10, pady=(5,0))
+        tk.Label(self.root, text=message, fg="white", bg="#1e1e1e", font=("Consolas", 9), anchor="w").pack(fill="x", padx=10, pady=(0,5))
+        
+        # Auto-Destruct
+        self.root.after(duration, self.root.destroy)
+
+def toast(title: str, message: str):
+    ToastManager.show(title, message)
+
+EOF
+
+# ============================================================
+# FILE: pyproject.toml
+# ============================================================
+cat << 'EOF' > "pyproject.toml"
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multiclip"
+version = "2.2.0"
+description = "The Arsenal"
+dependencies = [
+    "keyboard",
+    "pyperclip",
+    "pyautogui",
+    "pynput",
+    "plyer"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+EOF
+
+# ============================================================
+# FILE: requirements.txt
+# ============================================================
+cat << 'EOF' > "requirements.txt"
+keyboard
+pyperclip
+pyautogui
+pynput
+plyer
+
+EOF
+
+# ============================================================
+# FILE: shared/clipboard_manager.py
+# ============================================================
+mkdir -p "shared"
+cat << 'EOF' > "shared/clipboard_manager.py"
+import pyperclip
+import json
+from datetime import datetime
+from typing import Dict, List, Optional, Any
+import threading
+import time
+
+class ClipboardSlot:
+    def __init__(self, slot_id: int, content: str = "", content_type: str = "text"):
+        self.id = slot_id
+        self.content = content
+        self.timestamp = datetime.now()
+        self.content_type = content_type
+        self.preview = self._generate_preview()
+    
+    def _generate_preview(self) -> str:
+        if len(self.content) <= 50:
+            return self.content
+        return self.content[:47] + "..."
+    
+    def update_content(self, content: str, content_type: str = "text"):
+        self.content = content
+        self.content_type = content_type
+        self.timestamp = datetime.now()
+        self.preview = self._generate_preview()
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "content": self.content,
+            "timestamp": self.timestamp.isoformat(),
+            "content_type": self.content_type,
+            "preview": self.preview
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]):
+        slot = cls(data["id"], data["content"], data["content_type"])
+        slot.timestamp = datetime.fromisoformat(data["timestamp"])
+        return slot
+
+class ClipboardManager:
+    def __init__(self, num_slots: int = 10):
+        self.slots: Dict[int, ClipboardSlot] = {}
+        self.num_slots = num_slots
+        self.current_clipboard = ""
+        self.monitoring = False
+        self.monitor_thread = None
+        self._initialize_slots()
+    
+    def _initialize_slots(self):
+        for i in range(self.num_slots):
+            self.slots[i] = ClipboardSlot(i)
+    
+    def store_in_slot(self, slot_id: int, content: str, content_type: str = "text") -> bool:
+        if 0 <= slot_id < self.num_slots:
+            self.slots[slot_id].update_content(content, content_type)
+            return True
+        return False
+    
+    def get_slot_content(self, slot_id: int) -> Optional[str]:
+        if 0 <= slot_id < self.num_slots:
+            return self.slots[slot_id].content
+        return None
+    
+    def get_slot_preview(self, slot_id: int) -> Optional[str]:
+        if 0 <= slot_id < self.num_slots:
+            return self.slots[slot_id].preview
+        return None
+    
+    def copy_to_slot(self, slot_id: int) -> bool:
+        try:
+            content = pyperclip.paste()
+            return self.store_in_slot(slot_id, content)
+        except Exception:
+            return False
+    
+    def paste_from_slot(self, slot_id: int) -> bool:
+        content = self.get_slot_content(slot_id)
+        if content is not None:
+            try:
+                pyperclip.copy(content)
+                return True
+            except Exception:
+                return False
+        return False
+    
+    def get_all_slots_status(self) -> Dict[int, Dict[str, Any]]:
+        return {slot_id: slot.to_dict() for slot_id, slot in self.slots.items()}
+    
+    def clear_slot(self, slot_id: int) -> bool:
+        if 0 <= slot_id < self.num_slots:
+            self.slots[slot_id].update_content("")
+            return True
+        return False
+    
+    def clear_all_slots(self):
+        for slot_id in range(self.num_slots):
+            self.clear_slot(slot_id)
+    
+    def save_state(self, filepath: str) -> bool:
+        try:
+            state = {
+                "slots": {str(slot_id): slot.to_dict() for slot_id, slot in self.slots.items()},
+                "timestamp": datetime.now().isoformat()
+            }
+            with open(filepath, 'w') as f:
+                json.dump(state, f, indent=2)
+            return True
+        except Exception:
+            return False
+    
+    def load_state(self, filepath: str) -> bool:
+        try:
+            with open(filepath, 'r') as f:
+                state = json.load(f)
+            
+            for slot_id_str, slot_data in state["slots"].items():
+                slot_id = int(slot_id_str)
+                if 0 <= slot_id < self.num_slots:
+                    self.slots[slot_id] = ClipboardSlot.from_dict(slot_data)
+            return True
+        except Exception:
+            return False
+    
+    def start_monitoring(self):
+        if not self.monitoring:
+            self.monitoring = True
+            self.monitor_thread = threading.Thread(target=self._monitor_clipboard, daemon=True)
+            self.monitor_thread.start()
+    
+    def stop_monitoring(self):
+        self.monitoring = False
+        if self.monitor_thread:
+            self.monitor_thread.join(timeout=1)
+    
+    def _monitor_clipboard(self):
+        while self.monitoring:
+            try:
+                current = pyperclip.paste()
+                if current != self.current_clipboard:
+                    self.current_clipboard = current
+                    # Trigger clipboard change event if needed
+                time.sleep(0.1)
+            except Exception:
+                pass
+
+EOF
+
+# ============================================================
+# FILE: shared/config_manager.py
+# ============================================================
+mkdir -p "shared"
+cat << 'EOF' > "shared/config_manager.py"
+import json
+import os
+from pathlib import Path
+from typing import Dict, Any, Optional
+
+class ConfigManager:
+    def __init__(self, config_dir: str = "~/.multiclip"):
+        self.config_dir = Path(config_dir).expanduser()
+        self.config_file = self.config_dir / "config.json"
+        self.state_file = self.config_dir / "state.json"
+        self.snippets_file = self.config_dir / "snippets.json"
+        
+        self._ensure_config_dir()
+        self.config = self._load_config()
+    
+    def _ensure_config_dir(self):
+        self.config_dir.mkdir(parents=True, exist_ok=True)
+    
+    def _load_config(self) -> Dict[str, Any]:
+        default_config = {
+            "hotkeys": {
+                "copy_to_slot": "ctrl+{slot}",
+                "paste_from_slot": "ctrl+shift+{slot}",
+                "transfer_to_clipboard": "ctrl+alt+{slot}",
+                "orderly_mode_toggle": "ctrl+shift+o",
+                "orderly_copy": "ctrl+c",
+                "orderly_paste": "ctrl+v",
+                "snippers_view": "ctrl+shift+s",
+                "main_gui": "ctrl+shift+m"
+            },
+            "gui": {
+                "window_size": [800, 600],
+                "always_on_top": False,
+                "start_minimized": False,
+                "show_slot_previews": True,
+                "theme": "default"
+            },
+            "behavior": {
+                "auto_save_state": True,
+                "max_clipboard_history": 100,
+                "paste_delay_ms": 50,
+                "monitor_clipboard": True
+            },
+            "terminal": {
+                "paste_command": "ctrl+shift+v",
+                "detect_terminals": ["gnome-terminal", "xterm", "konsole", "terminal"],
+                "format_commands": True
+            }
+        }
+        
+        if self.config_file.exists():
+            try:
+                with open(self.config_file, 'r') as f:
+                    loaded_config = json.load(f)
+                # Merge with defaults to handle new config options
+                return {**default_config, **loaded_config}
+            except Exception as e:
+                print(f"Error loading config: {e}, using defaults")
+                return default_config
+        else:
+            self.save_config(default_config)
+            return default_config
+    
+    def save_config(self, config: Optional[Dict[str, Any]] = None):
+        config_to_save = config or self.config
+        try:
+            with open(self.config_file, 'w') as f:
+                json.dump(config_to_save, f, indent=2)
+        except Exception as e:
+            print(f"Error saving config: {e}")
+    
+    def get(self, key_path: str, default: Any = None) -> Any:
+        keys = key_path.split('.')
+        value = self.config
+        
+        for key in keys:
+            if isinstance(value, dict) and key in value:
+                value = value[key]
+            else:
+                return default
+        
+        return value
+    
+    def set(self, key_path: str, value: Any):
+        keys = key_path.split('.')
+        config_ref = self.config
+        
+        for key in keys[:-1]:
+            if key not in config_ref:
+                config_ref[key] = {}
+            config_ref = config_ref[key]
+        
+        config_ref[keys[-1]] = value
+        self.save_config()
+    
+    def get_hotkey(self, action: str, slot: Optional[int] = None) -> Optional[str]:
+        hotkey_template = self.get(f"hotkeys.{action}")
+        if hotkey_template and slot is not None:
+            return hotkey_template.format(slot=slot)
+        return hotkey_template
+    
+    def save_state(self, state_data: Dict[str, Any]):
+        try:
+            with open(self.state_file, 'w') as f:
+                json.dump(state_data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving state: {e}")
+    
+    def load_state(self) -> Dict[str, Any]:
+        if self.state_file.exists():
+            try:
+                with open(self.state_file, 'r') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"Error loading state: {e}")
+        return {}
+    
+    def save_snippets(self, snippets_data: Dict[str, Any]):
+        try:
+            with open(self.snippets_file, 'w') as f:
+                json.dump(snippets_data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving snippets: {e}")
+    
+    def load_snippets(self) -> Dict[str, Any]:
+        if self.snippets_file.exists():
+            try:
+                with open(self.snippets_file, 'r') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"Error loading snippets: {e}")
+        return {"categories": {}, "commands": {}}
+
+EOF
+
+# ============================================================
+# FILE: shared/snippets_manager.py
+# ============================================================
+mkdir -p "shared"
+cat << 'EOF' > "shared/snippets_manager.py"
+import json
+import uuid
+from typing import Dict, List, Any, Optional, Tuple
+from datetime import datetime
+import re
+
+class SnippetCommand:
+    def __init__(self, content: str, description: str = "", variables: List[str] = None):
+        self.id = str(uuid.uuid4())
+        self.content = content
+        self.description = description
+        self.variables = variables or self._extract_variables(content)
+        self.usage_count = 0
+        self.created_at = datetime.now()
+        self.last_used = None
+    
+    def _extract_variables(self, content: str) -> List[str]:
+        # Extract 'var' placeholders from command
+        pattern = r'\bvar\b'
+        matches = re.findall(pattern, content)
+        # Number them sequentially
+        return [f"var{i+1}" for i in range(len(matches))]
+    
+    def use(self):
+        self.usage_count += 1
+        self.last_used = datetime.now()
+    
+    def substitute_variables(self, variable_values: Dict[str, str]) -> str:
+        result = self.content
+        for i, var_name in enumerate(self.variables):
+            if var_name in variable_values:
+                # Replace the i-th occurrence of 'var' with the actual value
+                result = result.replace('var', variable_values[var_name], 1)
+        return result
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "id": self.id,
+            "content": self.content,
+            "description": self.description,
+            "variables": self.variables,
+            "usage_count": self.usage_count,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "last_used": self.last_used.isoformat() if self.last_used else None
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]):
+        cmd = cls(data["content"], data.get("description", ""), data.get("variables", []))
+        cmd.id = data.get("id", str(uuid.uuid4()))
+        cmd.usage_count = data.get("usage_count", 0)
+        if data.get("created_at"):
+            cmd.created_at = datetime.fromisoformat(data["created_at"])
+        if data.get("last_used"):
+            cmd.last_used = datetime.fromisoformat(data["last_used"])
+        return cmd
+
+class SnippetCategory:
+    def __init__(self, name: str, parent: Optional['SnippetCategory'] = None):
+        self.name = name
+        self.parent = parent
+        self.commands: List[SnippetCommand] = []
+        self.subcategories: List['SnippetCategory'] = []
+        self.id = str(uuid.uuid4())
+    
+    def add_command(self, command: SnippetCommand):
+        self.commands.append(command)
+    
+    def remove_command(self, command_id: str) -> bool:
+        for i, cmd in enumerate(self.commands):
+            if cmd.id == command_id:
+                del self.commands[i]
+                return True
+        return False
+    
+    def add_subcategory(self, category: 'SnippetCategory'):
+        category.parent = self
+        self.subcategories.append(category)
+    
+    def remove_subcategory(self, category_name: str) -> bool:
+        for i, cat in enumerate(self.subcategories):
+            if cat.name == category_name:
+                del self.subcategories[i]
+                return True
+        return False
+    
+    def get_full_path(self) -> str:
+        if self.parent:
+            return f"{self.parent.get_full_path()}/{self.name}"
+        return self.name
+    
+    def find_command(self, command_id: str) -> Optional[SnippetCommand]:
+        # Search in this category
+        for cmd in self.commands:
+            if cmd.id == command_id:
+                return cmd
+        
+        # Search in subcategories
+        for subcat in self.subcategories:
+            found = subcat.find_command(command_id)
+            if found:
+                return found
+        
+        return None
+    
+    def search_commands(self, query: str) -> List[Tuple[SnippetCommand, str]]:
+        results = []
+        query_lower = query.lower()
+        
+        # Search in this category
+        for cmd in self.commands:
+            if (query_lower in cmd.content.lower() or 
+                query_lower in cmd.description.lower()):
+                results.append((cmd, self.get_full_path()))
+        
+        # Search in subcategories
+        for subcat in self.subcategories:
+            results.extend(subcat.search_commands(query))
+        
+        return results
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name,
+            "id": self.id,
+            "commands": [cmd.to_dict() for cmd in self.commands],
+            "subcategories": [subcat.to_dict() for subcat in self.subcategories]
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], parent: Optional['SnippetCategory'] = None):
+        category = cls(data["name"], parent)
+        category.id = data.get("id", str(uuid.uuid4()))
+        
+        # Load commands
+        for cmd_data in data.get("commands", []):
+            category.commands.append(SnippetCommand.from_dict(cmd_data))
+        
+        # Load subcategories
+        for subcat_data in data.get("subcategories", []):
+            category.subcategories.append(cls.from_dict(subcat_data, category))
+        
+        return category
+
+class SnippetsManager:
+    def __init__(self):
+        self.root_categories: List[SnippetCategory] = []
+        self._initialize_default_categories()
+    
+    def _initialize_default_categories(self):
+        # Create default category structure
+        ssh_cat = SnippetCategory("SSH")
+        ssh_cat.add_command(SnippetCommand(
+            "ssh -p var user@var", 
+            "SSH connection with custom port",
+            ["port", "hostname"]
+        ))
+        ssh_cat.add_command(SnippetCommand(
+            "ssh-keygen -t rsa -b 4096 -C 'var'",
+            "Generate SSH key with email",
+            ["email"]
+        ))
+        
+        docker_cat = SnippetCategory("Docker")
+        docker_cat.add_command(SnippetCommand(
+            "docker run -it --rm -p var:var var",
+            "Run container with port mapping",
+            ["host_port", "container_port", "image"]
+        ))
+        docker_cat.add_command(SnippetCommand(
+            "docker exec -it var /bin/bash",
+            "Execute bash in running container",
+            ["container_name"]
+        ))
+        
+        adb_cat = SnippetCategory("ADB")
+        adb_cat.add_command(SnippetCommand(
+            "adb connect var:5555",
+            "Connect to device over TCP",
+            ["device_ip"]
+        ))
+        adb_cat.add_command(SnippetCommand(
+            "adb shell am start -n var/var",
+            "Start Android activity",
+            ["package", "activity"]
+        ))
+        
+        git_cat = SnippetCategory("Git")
+        git_cat.add_command(SnippetCommand(
+            "git clone --branch var var",
+            "Clone specific branch",
+            ["branch", "repo_url"]
+        ))
+        
+        self.root_categories = [ssh_cat, docker_cat, adb_cat, git_cat]
+    
+    def add_root_category(self, name: str) -> SnippetCategory:
+        category = SnippetCategory(name)
+        self.root_categories.append(category)
+        return category
+    
+    def remove_root_category(self, name: str) -> bool:
+        for i, cat in enumerate(self.root_categories):
+            if cat.name == name:
+                del self.root_categories[i]
+                return True
+        return False
+    
+    def find_category(self, path: str) -> Optional[SnippetCategory]:
+        parts = path.split('/')
+        if not parts:
+            return None
+        
+        # Find root category
+        root_name = parts[0]
+        current_cat = None
+        for cat in self.root_categories:
+            if cat.name == root_name:
+                current_cat = cat
+                break
+        
+        if not current_cat:
+            return None
+        
+        # Navigate through subcategories
+        for part in parts[1:]:
+            found = False
+            for subcat in current_cat.subcategories:
+                if subcat.name == part:
+                    current_cat = subcat
+                    found = True
+                    break
+            if not found:
+                return None
+        
+        return current_cat
+    
+    def add_command_to_category(self, category_path: str, command: SnippetCommand) -> bool:
+        category = self.find_category(category_path)
+        if category:
+            category.add_command(command)
+            return True
+        return False
+    
+    def find_command(self, command_id: str) -> Optional[Tuple[SnippetCommand, SnippetCategory]]:
+        for root_cat in self.root_categories:
+            cmd = root_cat.find_command(command_id)
+            if cmd:
+                return cmd, root_cat
+        return None
+    
+    def search_all_commands(self, query: str) -> List[Tuple[SnippetCommand, str]]:
+        results = []
+        for root_cat in self.root_categories:
+            results.extend(root_cat.search_commands(query))
+        return results
+    
+    def get_category_tree(self) -> List[Dict[str, Any]]:
+        return [cat.to_dict() for cat in self.root_categories]
+    
+    def load_from_dict(self, data: Dict[str, Any]):
+        self.root_categories = []
+        for cat_data in data.get("categories", []):
+            self.root_categories.append(SnippetCategory.from_dict(cat_data))
+    
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "categories": [cat.to_dict() for cat in self.root_categories],
+            "metadata": {
+                "version": "1.0",
+                "created_at": datetime.now().isoformat()
+            }
+        }
+
+EOF
