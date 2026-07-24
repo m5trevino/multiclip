@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 4 — Transfer System</title>
+<style>
+  :root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --fg: #c9d1d9; --fg2: #8b949e; --accent: #58a6ff; --gold: #ffd700; --green: #32cd32; --orange: #ff9966; --red: #f85149; --purple: #a371f7; --border: #30363d; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; margin: 0; padding: 0; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  h1 { font-size: 2rem; color: var(--gold); margin-bottom: 0.3em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin-top: 2em; border-left: 4px solid var(--accent); padding-left: 12px; }
+  h3 { font-size: 1.1rem; color: var(--purple); margin-top: 1.5em; }
+  .subtitle { color: var(--fg2); font-size: 1.05rem; margin-bottom: 2em; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+  code, pre { font-family: 'Consolas', 'Monaco', monospace; background: var(--bg3); border-radius: 6px; }
+  code { padding: 2px 6px; font-size: 0.9em; }
+  pre { padding: 16px; overflow-x: auto; font-size: 0.85rem; border: 1px solid var(--border); }
+  .highlight { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; }
+  .warning { background: rgba(248,81,73,0.1); border-left: 3px solid var(--red); }
+  .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .nav a { text-decoration: none; color: var(--fg2); padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; transition: all 0.2s; }
+  .nav a:hover { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .nav a.active { color: var(--gold); border-color: var(--gold); background: rgba(255,215,0,0.08); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--accent); font-weight: 600; }
+  tr:hover { background: rgba(255,255,255,0.03); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🔄 Step 4 — Transfer System</h1>
+<p class="subtitle">How content moves from Clipman History to Workbench slots. Block Bundle vs 1 slot per line.</p>
+
+<div class="nav">
+  <a href="step-00-project-overview.html">00. Overview</a>
+  <a href="step-01-hotkeys.html">01. Hotkeys</a>
+  <a href="step-02-workbench.html">02. Workbench</a>
+  <a href="step-03-history-panel.html">03. History Panel</a>
+  <a href="step-04-transfers.html" class="active">04. Transfers</a>
+  <a href="step-05-orderly-mode.html">05. Orderly Mode</a>
+  <a href="step-06-snippets.html">06. Snippets</a>
+  <a href="step-07-boot-service.html">07. Boot Service</a>
+  <a href="step-08-testing.html">08. Testing</a>
+</div>
+
+<h2>📋 Transfer Modes</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>📦 Block Bundle</h3>
+    <p><strong>Button:</strong> "Block Bundle" (was "TRANSFER AS BATCH")</p>
+    <p><strong>Behavior:</strong> All selected items are concatenated with newlines and placed into <strong>one</strong> slot. If multiple items selected, fills empty slots first.</p>
+    <pre>selected = [entry1, entry2, entry3]
+→ Fills slot 1 with entry1
+→ Fills slot 2 with entry2  
+→ Fills slot 3 with entry3
+(start_slot=None = empty-first mode)</pre>
+  </div>
+  <div class="card">
+    <h3>📄 1 Slot Per Line</h3>
+    <p><strong>Button:</strong> "1 slot per line" (was "TRANSFER AS ONE SLOT")</p>
+    <p><strong>Behavior:</strong> Each selected item gets its <strong>own</strong> slot. Two sub-modes:</p>
+    <ul>
+      <li><strong>Auto-Sequential:</strong> Fills from next empty slot (1→30)</li>
+      <li><strong>Manual:</strong> User clicks a workbench slot first → fills from there</li>
+    </ul>
+    <pre>selected = [entry1, entry2]
+Manual mode, clicked slot 10:
+→ Slot 10 = entry1
+→ Slot 11 = entry2</pre>
+  </div>
+</div>
+
+<h2>🔧 Mode Toggle: Auto-Sequential vs Manual</h2>
+<div class="card">
+  <p>The mode toggle widget lives under the "1 slot per line" button in the Clipman History panel:</p>
+  <pre>slot_mode_var = tk.StringVar(value="Auto-Sequential")
+# Options: "Auto-Sequential" | "Manual Slot"
+
+# Auto-Sequential: start_slot = None
+# Manual: user clicks a workbench slot to set start_slot</pre>
+
+  <h3>Manual Slot Selection Flow</h3>
+  <pre>1. User switches to "Manual Slot" mode
+2. User left-clicks a Workbench slot (e.g., slot 10)
+3. Slot gets temporary highlight (gold background)
+4. User selects items in Clipman History
+5. User clicks "1 slot per line"
+6. Items fill starting from slot 10, wrapping 30→1</pre>
+</div>
+
+<h2>📄 Core Transfer Code</h2>
+<div class="card">
+  <h3>_transfer_clipman_to_og_slots() — multiclip.py lines 214-284</h3>
+  <pre>def _transfer_clipman_to_og_slots(self, selected_entries, start_slot=None):
+    """
+    start_slot=None  → Block Bundle mode (fill empty slots first)
+    start_slot=N     → 1 slot per line (fill sequentially from N, wrap 30→1)
+    """
+    contents = []
+    for item in selected_entries:
+        if isinstance(item, str):
+            contents.append(item)
+        elif hasattr(item, 'decoded_content'):
+            contents.append(item.decoded_content)
+        else:
+            contents.append(str(item))
+
+    filled = []
+    if start_slot is not None:
+        # 1 SLOT PER LINE: sequential fill with wrap
+        slot = start_slot
+        for content in contents:
+            self.slots[str(slot)] = content
+            filled.append(slot)
+            slot += 1
+            if slot > 30:
+                slot = 1
+    else:
+        # BLOCK BUNDLE: fill empty slots first
+        empty_slots = [i for i in range(1, 31) if not self.slots.get(str(i))]
+        for content in contents:
+            if empty_slots:
+                slot = empty_slots.pop(0)
+                self.slots[str(slot)] = content
+                filled.append(slot)
+            else:
+                # SLOTS FULL dialog
+                slot = simpledialog.askinteger(
+                    "SLOTS FULL",
+                    "Type a slot number (1-30) or Cancel to overwrite slot 1",
+                    minvalue=1, maxvalue=30, initialvalue=1
+                )
+                ...
+
+    self.save_slots()
+    self._refresh_slot_displays(filled)
+    self.show_toast(title, preview)
+    return filled</pre>
+</div>
+
+<h2>🎨 Visual Feedback on Transfer</h2>
+<div class="card">
+  <table>
+    <tr><th>Transfer Type</th><th>Flash Color</th><th>Toast Message</th></tr>
+    <tr><td>Block Bundle</td><td>Gold (#ffd700)</td><td>"CLIPMAN → TRANSFER (N item(s))"</td></tr>
+    <tr><td>1 slot per line</td><td>Gold (#ffd700)</td><td>"1 per line → Slots 10-12"</td></tr>
+    <tr><td>Preview popup transfer</td><td>Gold (#ffd700)</td><td>"Transferred to Slot 07"</td></tr>
+    <tr><td>Send to Snippet</td><td>Green (#32cd32)</td><td>"Saved to Snippet"</td></tr>
+  </table>
+
+  <h3>Flash Implementation</h3>
+  <pre>def flash_slot(self, slot_id, duration_ms=2000, color="#ffd700"):
+    # Store original color
+    # Schedule alternating color/restore every 200ms
+    # After duration, restore original
+    # If already flashing → cancel old timer, restart</pre>
+</div>
+
+<h2>📋 Transfer Call Chain</h2>
+<div class="card">
+  <pre>User clicks "Block Bundle"
+    ↓
+MainWindow._on_clipman_transfer_batch()
+    ↓
+MainWindow._get_all_selected_entries()  # locked + current selection
+    ↓
+multiclip._transfer_clipman_to_og_slots(entries, start_slot=None)
+    ↓
+[ fills empty slots → save_slots() → _refresh_slot_displays() ]
+    ↓
+MainWindow.flash_slot(slot_id)  # gold pulse
+    ↓
+MultiClipV2.show_toast(title, preview)  # desktop notification
+
+---
+
+User clicks "1 slot per line" (Manual mode, slot 10 selected)
+    ↓
+MainWindow._on_clipman_transfer_one_slot()
+    ↓
+start_slot = self.manual_start_slot  # 10
+    ↓
+multiclip._transfer_clipman_to_og_slots(entries, start_slot=10)
+    ↓
+[ fills slots 10, 11, 12... wraps 30→1 → save → refresh ]
+    ↓
+flash_slot + show_toast</pre>
+</div>
+
+<h2>🧪 Testing Transfers</h2>
+<div class="card">
+  <pre># BLOCK BUNDLE TEST
+1. Select 3 items in Clipman History
+2. Click "Block Bundle"
+3. Verify 3 empty slots are filled (starting from slot 1)
+4. Check clipboard_dict.json has the content
+
+# 1 SLOT PER LINE — AUTO TEST
+1. Switch mode to "Auto-Sequential"
+2. Select 2 items
+3. Click "1 slot per line"
+4. Verify next 2 empty slots are filled
+
+# 1 SLOT PER LINE — MANUAL TEST
+1. Switch mode to "Manual Slot"
+2. Left-click Workbench slot 10
+3. Verify slot 10 gets gold highlight
+4. Select 2 items
+5. Click "1 slot per line"
+6. Verify slots 10 and 11 are filled
+
+# SLOTS FULL TEST
+1. Fill all 30 slots
+2. Select an item, click "Block Bundle"
+3. Verify "SLOTS FULL" dialog appears
+4. Enter slot 5 → Verify slot 5 is overwritten</pre>
+</div>
+
+<div class="highlight">
+  <strong>Next:</strong> <a href="step-05-orderly-mode.html" style="color:var(--accent);">Step 5 — Orderly Mode</a>
+</div>
+
+</div>
+</body>
+</html>

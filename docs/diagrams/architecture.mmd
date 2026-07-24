@@ -1,0 +1,54 @@
+graph TB
+    subgraph User_Input["User Input Layer"]
+        HK[Global Hotkeys<br/>pynput Listener]
+        UI[TKinter GUI<br/>main_window.py]
+        CLI[Clipman CLI<br/>clipman_cli.py]
+    end
+
+    subgraph Core_Engine["Core Engine"]
+        MC[MultiClipV2<br/>multiclip.py]
+        CM[ClipboardManager<br/>shared/clipboard_manager.py]
+        CP[ClipmanParser<br/>shared/clipman_parser.py]
+    end
+
+    subgraph Data_Storage["Data & State"]
+        JSON[clipboard_dict.json<br/>30 Slots]
+        TEXTSRC[~/.cache/xfce4/clipman/textsrc]
+        SNIP[snippets.json]
+        CFG[config.json / state.json]
+    end
+
+    subgraph Output["Output Layer"]
+        XDO[xdotool Injection]
+        PAG[pyautogui Fallback]
+        TOAST[notify-send Toast]
+    end
+
+    subgraph Modules["Feature Modules"]
+        DIFF[DiffMarker<br/>diff_marker/]
+        HP[HistoryPanel<br/>gui/history_panel.py]
+        SM[SnippetsManager<br/>shared/snippets_manager.py]
+        CFGM[ConfigManager<br/>shared/config_manager.py]
+    end
+
+    HK -->|Ctrl+Alt+Digit| MC
+    UI -->|Callbacks| MC
+    CLI -->|Deploy Queue| MC
+
+    MC -->|Load/Save| JSON
+    MC -->|Read| TEXTSRC
+    MC -->|Store/Retrieve| CM
+    CP -->|Parse Entries| TEXTSRC
+
+    MC -->|Paste Trigger| XDO
+    MC -->|Fallback| PAG
+    MC -->|Notifications| TOAST
+
+    UI -->|Renders| HP
+    UI -->|Diff View| DIFF
+    UI -->|Snippet Vault| SM
+    UI -->|Configuration| CFGM
+
+    CM -->|Ordered Access| JSON
+    SM -->|Persist| SNIP
+    CFGM -->|Settings| CFG

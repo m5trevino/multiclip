@@ -1,0 +1,58 @@
+graph LR
+    subgraph multiclip_py["multiclip.py (408 lines)"]
+        A1[_ensure_single_instance]
+        A2[_register_hotkeys]
+        A3[_handle_combo]
+        A4[add_to_slot]
+        A5[paste_from_slot]
+        A6[_transfer_clipman_to_og_slots]
+        A7[show_toast]
+        A8[_is_terminal]
+    end
+
+    subgraph main_window_py["gui/main_window.py (835 lines)"]
+        B1[MainWindow.__init__]
+        B2[_create_ui]
+        B3[_wire_clipman]
+        B4[set_clipman_entries]
+        B5[_on_clipman_transfer_batch]
+        B6[_on_clipman_transfer_one_slot]
+        B7[show_toast]
+        B8[_load_snippets]
+        B9[_save_snippet]
+    end
+
+    subgraph clipman_parser_py["shared/clipman_parser.py (157 lines)"]
+        C1[ClipmanParser.parse]
+        C2[_split_on_unescaped_semicolon]
+        C3[ClipEntry._decode]
+        C4[ClipEntry._make_preview]
+    end
+
+    subgraph diff_marker["diff_marker/"]
+        D1[DiffManager.calculate_diff]
+        D2[DiffInterface._perform_diff]
+        D3[DiffInterface._display_side_by_side_diff]
+    end
+
+    A2 -->|on_press/on_release| A3
+    A3 -->|Copy| A4
+    A3 -->|Paste| A5
+    A5 -->|Detect Terminal| A8
+    A5 -->|Prefer| XDO[xdotool]
+    A5 -->|Fallback| PAG[pyautogui]
+
+    B1 -->|Creates| B2
+    B2 -->|Renders| B3
+    B3 -->|Calls| C1
+    B4 -->|Paginates| B2
+    B6 -->|Calls| A6
+
+    C1 -->|Uses| C2
+    C1 -->|Returns| CE[ClipEntry list]
+    CE -->|Preview| C4
+    CE -->|Decode| C3
+
+    D2 -->|Invokes| D1
+    D1 -->|Uses| difflib
+    D2 -->|Renders| D3

@@ -9,3 +9,10 @@ yrotsih*.txt
 *.token
 *.key
 .env
+.aider*
+.venv/
+*.bak
+*.bak.*
+.dsp/
+devwater-data/
+C:\\Users\\

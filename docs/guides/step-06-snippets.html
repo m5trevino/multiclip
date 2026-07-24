@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 6 — Snippets Panel</title>
+<style>
+  :root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --fg: #c9d1d9; --fg2: #8b949e; --accent: #58a6ff; --gold: #ffd700; --green: #32cd32; --orange: #ff9966; --red: #f85149; --purple: #a371f7; --border: #30363d; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; margin: 0; padding: 0; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  h1 { font-size: 2rem; color: var(--gold); margin-bottom: 0.3em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin-top: 2em; border-left: 4px solid var(--accent); padding-left: 12px; }
+  h3 { font-size: 1.1rem; color: var(--purple); margin-top: 1.5em; }
+  .subtitle { color: var(--fg2); font-size: 1.05rem; margin-bottom: 2em; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+  code, pre { font-family: 'Consolas', 'Monaco', monospace; background: var(--bg3); border-radius: 6px; }
+  code { padding: 2px 6px; font-size: 0.9em; }
+  pre { padding: 16px; overflow-x: auto; font-size: 0.85rem; border: 1px solid var(--border); }
+  .highlight { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; }
+  .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .nav a { text-decoration: none; color: var(--fg2); padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; transition: all 0.2s; }
+  .nav a:hover { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .nav a.active { color: var(--gold); border-color: var(--gold); background: rgba(255,215,0,0.08); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--accent); font-weight: 600; }
+  tr:hover { background: rgba(255,255,255,0.03); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>📝 Step 6 — Snippets Panel</h1>
+<p class="subtitle">8 persistent snippet slots at the bottom-left. Save, X-remove, and Send-to-Snippet from Clipman History.</p>
+
+<div class="nav">
+  <a href="step-00-project-overview.html">00. Overview</a>
+  <a href="step-01-hotkeys.html">01. Hotkeys</a>
+  <a href="step-02-workbench.html">02. Workbench</a>
+  <a href="step-03-history-panel.html">03. History Panel</a>
+  <a href="step-04-transfers.html">04. Transfers</a>
+  <a href="step-05-orderly-mode.html">05. Orderly Mode</a>
+  <a href="step-06-snippets.html" class="active">06. Snippets</a>
+  <a href="step-07-boot-service.html">07. Boot Service</a>
+  <a href="step-08-testing.html">08. Testing</a>
+</div>
+
+<h2>📐 Layout</h2>
+<div class="card">
+  <p>Snippets live in a LabelFrame at the <strong>bottom-left</strong>, directly under the 30-slot Workbench:</p>
+  <pre>┌─────────────────────────────────────────┐
+│  WORK BENCH (30 SLOTS)                  │
+│  ├─ Slot 1 ... Slot 30                  │
+│  └─ (scrollable canvas)                 │
+├─────────────────────────────────────────┤
+│  SNIPPETS (persistent)                  │
+│  ├─ S1: [_______________] [Save] [X]   │
+│  ├─ S2: [_______________] [Save] [X]   │
+│  ├─ S3: [_______________] [Save] [X]   │
+│  ├─ ...                                 │
+│  └─ S8: [_______________] [Save] [X]   │
+└─────────────────────────────────────────┘</pre>
+</div>
+
+<h2>💾 Persistence</h2>
+<div class="card">
+  <p>Snippets are saved to <code>snippets.json</code> in the project root:</p>
+  <pre>{
+  "0": "First snippet content",
+  "1": "Second snippet content",
+  "3": "Fourth snippet content"
+}</pre>
+  <p>Keys are 0-based indices. Empty snippets are NOT stored in the file.</p>
+  <p><strong>Load on startup:</strong> <code>_load_snippets()</code> (line 649)<br>
+  <strong>Save on edit:</strong> <code>_save_snippet(idx)</code> (line 664)</p>
+</div>
+
+<h2>📄 Snippet Widget Code</h2>
+<div class="card">
+  <h3>Creation — lines 378-391</h3>
+  <pre>self.snippet_entries: Dict[int, tk.Entry] = {}
+for i in range(8):
+    row = tk.Frame(self.snippets_panel)
+    row.pack(fill='x', pady=1)
+
+    tk.Label(row, text=f"S{i+1}:", font=('Consolas', 8, 'bold'), width=3).pack(side='left')
+
+    entry = tk.Entry(row, font=('Arial', 9), bd=1)
+    entry.pack(side='left', fill='x', expand=True, padx=2)
+    self.snippet_entries[i] = entry
+
+    save_btn = tk.Button(row, text="Save", font=('Arial', 7),
+                         command=lambda idx=i: self._save_snippet(idx))
+    save_btn.pack(side='right', padx=2)
+
+    # X button (for removal)
+    x_btn = tk.Button(row, text="X", font=('Arial', 7), fg='red',
+                      command=lambda idx=i: self._remove_snippet(idx))
+    x_btn.pack(side='right', padx=2)</pre>
+
+  <h3>Load — lines 649-662</h3>
+  <pre>def _load_snippets(self):
+    if os.path.exists(self.snippets_file):
+        with open(self.snippets_file, 'r') as f:
+            data = json.load(f)
+            for k, v in data.items():
+                idx = int(k)
+                if idx in self.snippet_entries:
+                    self.snippet_entries[idx].delete(0, 'end')
+                    self.snippet_entries[idx].insert(0, v)</pre>
+
+  <h3>Save — lines 664-678</h3>
+  <pre>def _save_snippet(self, idx: int):
+    content = self.snippet_entries[idx].get()
+    data = {}
+    if os.path.exists(self.snippets_file):
+        with open(self.snippets_file, 'r') as f:
+            data = json.load(f)
+    data[str(idx)] = content
+    with open(self.snippets_file, 'w') as f:
+        json.dump(data, f, indent=2)
+    self._toast(f"Snippet S{idx+1} saved")</pre>
+</div>
+
+<h2>📤 Send to Snippet</h2>
+<div class="card">
+  <p>Transfer selected Clipman History items directly to snippets:</p>
+  <pre>def _send_to_snippets(self, contents: list):
+    sent = 0
+    for content in contents:
+        for i in range(8):
+            entry = self.ui.snippet_entries.get(i)
+            if entry and not entry.get().strip():
+                entry.delete(0, 'end')
+                entry.insert(0, content)
+                self.ui._save_snippet(i)
+                self.ui.flash_snippet(i, color="#32cd32")
+                sent += 1
+                break
+    if sent:
+        self.show_toast("Saved to Snippet", f"{sent} item(s) sent")
+    else:
+        messagebox.showwarning("Snippets Full", "All 8 slots occupied")</pre>
+  <p><strong>Behavior:</strong> Finds first empty snippet slot, fills it, saves to JSON, flashes green.</p>
+</div>
+
+<h2>❌ X Button Removal</h2>
+<div class="card">
+  <p>User wants BOTH clear+save AND dedicated X button:</p>
+  <pre>def _remove_snippet(self, idx: int):
+    # Clear the entry
+    self.snippet_entries[idx].delete(0, 'end')
+    # Remove from JSON file
+    data = {}
+    if os.path.exists(self.snippets_file):
+        with open(self.snippets_file, 'r') as f:
+            data = json.load(f)
+    data[str(idx)] = ""  # or: del data[str(idx)]
+    with open(self.snippets_file, 'w') as f:
+        json.dump(data, f, indent=2)
+    self._toast(f"Snippet S{idx+1} removed")</pre>
+</div>
+
+<h2>✨ Snippet Flash Animation</h2>
+<div class="card">
+  <pre>def flash_snippet(self, idx, color="#32cd32", duration_ms=2000):
+    # Same mechanism as slot flash:
+    # - Store original background
+    # - Toggle color every 200ms
+    # - Restore after duration
+    # - Cancel old timer if already flashing</pre>
+</div>
+
+<h2>🧪 Testing Snippets</h2>
+<div class="card">
+  <pre># SAVE TEST
+1. Type text into S3 entry
+2. Click "Save" button
+3. Check snippets.json: python3 -c "import json; print(json.load(open('snippets.json')))"
+4. Restart multiclip
+5. Verify S3 still shows the text
+
+# X REMOVE TEST
+1. Click "X" on S3
+2. Verify entry clears
+3. Check snippets.json — S3 should be empty or removed
+4. Restart multiclip
+5. Verify S3 is empty
+
+# SEND TO SNIPPET TEST
+1. Select an item in Clipman History
+2. Click "Send to Snippet" button
+3. Verify first empty snippet gets the content
+4. Verify green flash on that snippet
+5. Verify snippets.json updated</pre>
+</div>
+
+<div class="highlight">
+  <strong>Next:</strong> <a href="step-07-boot-service.html" style="color:var(--accent);">Step 7 — Boot Service</a>
+</div>
+
+</div>
+</body>
+</html>

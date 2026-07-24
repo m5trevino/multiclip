@@ -1,0 +1,31 @@
+graph TD
+    Root[MultiClip V2 System]
+
+    Root --> Core[Core Engine]
+    Root --> GUI[GUI Layer]
+    Root --> Shared[Shared Services]
+    Root --> CLI[CLI Tools]
+    Root --> Sys[System Layer]
+
+    Core --> MC[MultiClipV2<br/>multiclip.py]
+    Core --> HK[Hotkey Listener<br/>pynput]
+    Core --> PM[Paste Manager<br/>xdotool / pyautogui]
+
+    GUI --> MW[MainWindow<br/>gui/main_window.py]
+    GUI --> HP[HistoryPanel<br/>gui/history_panel.py]
+    GUI --> SD[SlotDisplay<br/>30-slot grid]
+    GUI --> DI[DiffInterface<br/>diff_marker/diff_interface.py]
+    GUI --> EO[EditOverlay<br/>Modal editor]
+    GUI --> CPOP[ClipmanPreviewPopup<br/>Preview modal]
+
+    Shared --> CMP[ClipmanParser<br/>shared/clipman_parser.py]
+    Shared --> CM[ClipboardManager<br/>shared/clipboard_manager.py]
+    Shared --> SM[SnippetVault<br/>shared/snippets_manager.py]
+    Shared --> CFG[ConfigManager<br/>shared/config_manager.py]
+    Shared --> DM[DiffManager<br/>diff_marker/diff_manager.py]
+
+    CLI --> CCLI[ClipmanBrowser<br/>clipman_cli.py]
+
+    Sys --> Boot[SysVinit Service]
+    Sys --> Lock[Single-Instance Lock<br/>fcntl flock]
+    Sys --> Toast[notify-send]

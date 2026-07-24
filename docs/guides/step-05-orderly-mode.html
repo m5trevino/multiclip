@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 5 — Orderly Mode</title>
+<style>
+  :root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --fg: #c9d1d9; --fg2: #8b949e; --accent: #58a6ff; --gold: #ffd700; --green: #32cd32; --orange: #ff9966; --red: #f85149; --purple: #a371f7; --border: #30363d; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; margin: 0; padding: 0; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  h1 { font-size: 2rem; color: var(--gold); margin-bottom: 0.3em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin-top: 2em; border-left: 4px solid var(--accent); padding-left: 12px; }
+  h3 { font-size: 1.1rem; color: var(--purple); margin-top: 1.5em; }
+  .subtitle { color: var(--fg2); font-size: 1.05rem; margin-bottom: 2em; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+  code, pre { font-family: 'Consolas', 'Monaco', monospace; background: var(--bg3); border-radius: 6px; }
+  code { padding: 2px 6px; font-size: 0.9em; }
+  pre { padding: 16px; overflow-x: auto; font-size: 0.85rem; border: 1px solid var(--border); }
+  .highlight { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; }
+  .warning { background: rgba(248,81,73,0.1); border-left: 3px solid var(--red); }
+  .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .nav a { text-decoration: none; color: var(--fg2); padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; transition: all 0.2s; }
+  .nav a:hover { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .nav a.active { color: var(--gold); border-color: var(--gold); background: rgba(255,215,0,0.08); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--accent); font-weight: 600; }
+  tr:hover { background: rgba(255,255,255,0.03); }
+  .cursor-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin: 8px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🎯 Step 5 — Orderly Mode</h1>
+<p class="subtitle">Auto-capture clipboard into sequential slots. FIFO/LIFO paste with independent copy/paste cursors. Wraps 30→1.</p>
+
+<div class="nav">
+  <a href="step-00-project-overview.html">00. Overview</a>
+  <a href="step-01-hotkeys.html">01. Hotkeys</a>
+  <a href="step-02-workbench.html">02. Workbench</a>
+  <a href="step-03-history-panel.html">03. History Panel</a>
+  <a href="step-04-transfers.html">04. Transfers</a>
+  <a href="step-05-orderly-mode.html" class="active">05. Orderly Mode</a>
+  <a href="step-06-snippets.html">06. Snippets</a>
+  <a href="step-07-boot-service.html">07. Boot Service</a>
+  <a href="step-08-testing.html">08. Testing</a>
+</div>
+
+<h2>🎛️ How Orderly Mode Works</h2>
+<div class="card">
+  <ol>
+    <li>User clicks "Orderly" radio button in toolbar</li>
+    <li>Orderly monitor starts (300ms timer loop)</li>
+    <li>Every Ctrl+C in any app → auto-captured into next slot</li>
+    <li>Copy cursor advances (wraps 30→1)</li>
+    <li>User clicks "Paste Next" button → pastes from paste cursor</li>
+    <li>Paste cursor advances (FIFO: forward, LIFO: backward)</li>
+  </ol>
+</div>
+
+<h2>📊 State Variables</h2>
+<div class="card">
+  <pre>self.orderly_active = False           # Is Orderly mode running?
+self.orderly_submode = "fifo"         # "fifo" | "lifo"
+self.orderly_copy_cursor = 1          # Next slot to FILL (1-30)
+self.orderly_paste_cursor = 1         # Next slot to PASTE FROM (1-30)
+self.orderly_wrap_count = 0           # How many times we've wrapped
+self.orderly_last_clip_hash = ""      # MD5 of last captured content
+self.orderly_last_capture_time = 0    # Timestamp for debounce</pre>
+</div>
+
+<h2>🔄 Independent Cursors Explained</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>Copy Cursor</h3>
+    <div class="cursor-box">
+      <p><strong>Purpose:</strong> Where the <em>next</em> Ctrl+C copy will go</p>
+      <p><strong>Advances on:</strong> Every new clipboard capture</p>
+      <p><strong>Wrap:</strong> 30 → 1 (circular buffer)</p>
+      <p><strong>Highlight:</strong> Orange (#ff9966)</p>
+    </div>
+    <pre>Copied slots 1-60
+Copy cursor = 61 → wraps to 1
+User copies 70-80
+Copy cursor = 11</pre>
+  </div>
+  <div class="card">
+    <h3>Paste Cursor</h3>
+    <div class="cursor-box">
+      <p><strong>Purpose:</strong> What will be pasted on next "Paste Next"</p>
+      <p><strong>Advances on:</strong> Every "Paste Next" click</p>
+      <p><strong>Wrap:</strong> 30 → 1 (FIFO) or 1 → 30 (LIFO)</p>
+      <p><strong>Highlight:</strong> Green (#66ff66)</p>
+    </div>
+    <pre>User pasted slots 60-67
+Paste cursor = 68
+User copies 70-80
+Paste cursor STAYS at 68</pre>
+  </div>
+</div>
+
+<div class="card highlight">
+  <strong>Key Design Decision:</strong> Copy and paste cursors are INDEPENDENT. You can copy 100 items while only pasting 10 — the paste cursor remembers where it left off. The "next paste slot" is always highlighted in green on the workbench.
+</div>
+
+<h2>📄 Auto-Capture Code</h2>
+<div class="card">
+  <h3>start_orderly_monitor() — line 342</h3>
+  <pre>def start_orderly_monitor(self):
+    self.orderly_active = True
+    self._orderly_tick()
+    print("[ORDERLY] Monitor started")
+
+def _orderly_tick(self):
+    if not self.orderly_active:
+        return
+    self._orderly_clip_check()
+    self.orderly_timer = threading.Timer(0.3, self._orderly_tick)
+    self.orderly_timer.daemon = True
+    self.orderly_timer.start()</pre>
+
+  <h3>_orderly_clip_check() — line 372</h3>
+  <pre>def _orderly_clip_check(self):
+    if not self.orderly_active:
+        return
+    content = pyperclip.paste()
+    if not content or not content.strip():
+        return
+
+    # Debounce: min 100ms between captures
+    now = time.time()
+    if now - self.orderly_last_capture_time < 0.1:
+        return
+
+    # Hash deduplication
+    h = hashlib.md5(content.encode()).hexdigest()
+    if h == self.orderly_last_clip_hash:
+        return
+
+    # Don't capture if same as target slot (safety)
+    target_slot = str(self.orderly_copy_cursor)
+    if self.slots.get(target_slot) == content:
+        return
+
+    # Don't capture if GUI is focused (user typing inside MultiClip)
+    if self._is_gui_focused():
+        return
+
+    # CAPTURE
+    self.orderly_last_clip_hash = h
+    self.orderly_last_capture_time = now
+    self.slots[target_slot] = content
+    self.save_slots()
+
+    # Update UI
+    self.ui.slot_displays[copy_cursor - 1].update_content(content, preview)
+    self.ui.flash_slot(copy_cursor - 1)  # gold pulse
+
+    # Advance copy cursor
+    self.orderly_copy_cursor += 1
+    if self.orderly_copy_cursor > 30:
+        self.orderly_copy_cursor = 1
+        self.orderly_wrap_count += 1
+
+    # Highlight next copy target (orange)
+    self.ui.clear_slot_highlight(all)
+    self.ui.highlight_slot(copy_cursor - 1, color="#ff9966")</pre>
+</div>
+
+<h2>📄 Paste Next Code</h2>
+<div class="card">
+  <h3>orderly_paste_next() — line 433</h3>
+  <pre>def orderly_paste_next(self):
+    slot = self.orderly_paste_cursor
+    content = self.slots.get(str(slot), "")
+    if not content:
+        self.show_toast("ORDERLY PASTE", f"Slot {slot:02d} is empty")
+        return
+
+    # Load clipboard and inject
+    pyperclip.copy(content)
+    time.sleep(0.12)
+    self._release_all_modifiers()
+    time.sleep(0.06)
+
+    # xdotool injection (terminal-aware)
+    if self._is_terminal():
+        subprocess.run(["xdotool", "key", "--clearmodifiers", "ctrl+shift+v"])
+    else:
+        subprocess.run(["xdotool", "key", "--clearmodifiers", "ctrl+v"])
+
+    # Advance paste cursor
+    if self.orderly_submode == "lifo":
+        self.orderly_paste_cursor -= 1
+        if self.orderly_paste_cursor < 1:
+            self.orderly_paste_cursor = 30
+    else:  # fifo
+        self.orderly_paste_cursor += 1
+        if self.orderly_paste_cursor > 30:
+            self.orderly_paste_cursor = 1
+
+    # Highlight next paste target (green)
+    self.ui.clear_slot_highlight(all)
+    self.ui.highlight_slot(paste_cursor - 1, color="#66ff66")
+
+    self.show_toast(f"ORDERLY PASTE ← Slot {slot:02d}", preview)</pre>
+</div>
+
+<h2>🎛️ FIFO vs LIFO</h2>
+<div class="card">
+  <table>
+    <tr><th>Mode</th><th>Paste Order</th><th>Cursor Direction</th><th>Use Case</th></tr>
+    <tr><td><strong>FIFO</strong></td><td>Slot 1, 2, 3, 4...</td><td>Forward (+1, wrap 30→1)</td><td>Replay clips chronologically</td></tr>
+    <tr><td><strong>LIFO</strong></td><td>Slot 30, 29, 28...</td><td>Backward (-1, wrap 1→30)</td><td>Access most recent first</td></tr>
+  </table>
+
+  <h3>Example: Slots 1-5 filled with [A, B, C, D, E]</h3>
+  <pre>FIFO paste sequence:  A → B → C → D → E → A → B...
+LIFO paste sequence:  E → D → C → B → A → E → D...</pre>
+</div>
+
+<h2>🎨 UI Elements (when Orderly is active)</h2>
+<div class="card">
+  <table>
+    <tr><th>Element</th><th>Location</th><th>Purpose</th></tr>
+    <tr><td>FIFO button</td><td>Clipman History panel</td><td>Switch to FIFO paste order</td></tr>
+    <tr><td>LIFO button</td><td>Clipman History panel</td><td>Switch to LIFO paste order</td></tr>
+    <tr><td>Paste Next button</td><td>Bottom of Clipman panel</td><td>Paste from current cursor</td></tr>
+    <tr><td>Orange highlight</td><td>Workbench slot</td><td>Next slot that will be FILLED</td></tr>
+    <tr><td>Green highlight</td><td>Workbench slot</td><td>Next slot that will be PASTED</td></tr>
+    <tr><td>Status bar</td><td>Bottom of window</td><td>"Queue: N items | Next: Slot XX"</td></tr>
+  </table>
+</div>
+
+<h2>🧪 Testing Orderly Mode</h2>
+<div class="card">
+  <pre># 1. ACTIVATE
+Click "Orderly" radio button
+→ "[ORDERLY] Monitor started" in console
+→ FIFO/LIFO buttons appear
+
+# 2. AUTO-CAPTURE TEST
+Open a text editor
+Select text → Ctrl+C
+→ Slot 1 should fill
+→ Slot 1 flashes gold
+→ Copy cursor moves to slot 2 (orange highlight)
+
+Copy different text → Ctrl+C
+→ Slot 2 should fill
+→ Continue to slot 30...
+
+Copy one more → Ctrl+C
+→ Slot 1 should OVERWRITE (wrap)
+→ Wrap count increments
+
+# 3. FIFO PASTE TEST
+Click "Paste Next" button
+→ Content from slot 1 pastes
+→ Paste cursor moves to slot 2 (green highlight)
+
+Click "Paste Next" again
+→ Content from slot 2 pastes
+→ Paste cursor moves to slot 3
+
+# 4. LIFO PASTE TEST
+Click "LIFO" button
+Click "Paste Next"
+→ Content from most recently filled slot pastes
+→ Paste cursor moves backward
+
+# 5. DEACTIVATE
+Click "Multiclip" radio button
+→ "[ORDERLY] Monitor stopped"
+→ All highlights clear</pre>
+</div>
+
+<div class="highlight">
+  <strong>Next:</strong> <a href="step-06-snippets.html" style="color:var(--accent);">Step 6 — Snippets Panel</a>
+</div>
+
+</div>
+</body>
+</html>

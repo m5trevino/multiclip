@@ -1,0 +1,62 @@
+============================================================
+CLIPBOARD MONITOR — CONTROLLED TEST
+============================================================
+
+Run the test first:
+    cd /home/flintx/multiclip && ./.venv/bin/python3 test_clipboard_monitor.py
+
+Then follow these instructions IN ORDER.
+Copy ONLY the text shown in the [brackets] for each step.
+Use the method specified (Ctrl+C, Right-click, or Mouse select).
+
+Do NOT copy anything else during the test.
+
+============================================================
+
+STEP 1  [Method: Ctrl+C]
+Copy this exact text:
+[APPLE-BANANA-CHERRY-12345]
+
+STEP 2  [Method: Right-click → Copy]
+Copy this exact text:
+[DRAGON-EAGLE-FALCON-67890]
+
+STEP 3  [Method: Ctrl+C]
+Copy this exact text:
+[MOON-SUN-STARS-AAAAA]
+
+STEP 4  [Method: Mouse select only (if your system syncs mouse selections)]
+Select this exact text (do NOT press Ctrl+C):
+[MOUSE-SELECT-TEST-BBBBB]
+
+STEP 5  [Method: Ctrl+C]
+Copy this exact text:
+[OCEAN-MOUNTAIN-FOREST-CCCCC]
+
+STEP 6  [Method: Right-click → Copy]
+Copy this exact text:
+[THUNDER-LIGHTNING-RAIN-DDDDD]
+
+STEP 7  [Method: Ctrl+C]
+Copy this exact text:
+[PYTHON-CODE-TEST-99999]
+
+STEP 8  [Method: Ctrl+C]
+Copy this exact text:
+[FINAL-TEST-ENTRY-ZZZZZ]
+
+============================================================
+EXPECTED RESULTS
+============================================================
+After the test auto-stops (or you press Ctrl+C in the terminal),
+open the JSON file and count the entries:
+
+    cat ~/.cache/multiclip/test_history.json
+
+You should see EXACTLY 8 captures (or 7 if mouse-select doesn't work
+on your system).
+
+The text content of each capture should be exactly what was in the
+brackets above.
+
+If any are missing or wrong, tell me and we'll fix it.

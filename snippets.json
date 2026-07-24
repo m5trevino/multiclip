@@ -1,0 +1,22 @@
+{
+  "0": "flintx@email.com",
+  "1": "tunnel # Runs _ezenv_tunnel_toggle",
+  "2": "export http_proxy=socks5h://127.0.0.1:1081; export https_proxy=socks5h://127.0.0.1:1081; export all_proxy=socks5h://127.0.0.1:1081",
+  "3": "For pip I use socks5 tun0 1081 via the 'tunnel' alias.",
+  "4": "diagramming",
+  "5": "concise-planning",
+  "6": "plan-writing",
+  "7": "\u2502 systematic-debugging            \u2502 Finding the load_slots() +1 bug. This is the one skill that would have saved us time. \u2502\n  \u2502 dev-tech-journal                \u2502 Documenting build history and pivots.                                                 \u2502\n  \u2502 deepdive                        \u2502 Architecture docs and data flow diagrams.                                             \u2502\n  \u2502 diagramming / mermaid-diagram   \u2502 Visual docs for the README.                                                           \u2502\n  \u2502 plan-writing / concise-planning \u2502 Breaking down V3 features into steps.                                                 \u2502\n  \u2502 documentation   ",
+  "8": "",
+  "9": "",
+  "10": "",
+  "11": "",
+  "12": "",
+  "13": "",
+  "14": "",
+  "15": "",
+  "16": "",
+  "17": "",
+  "18": "",
+  "19": ""
+}

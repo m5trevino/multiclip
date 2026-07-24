@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 8 — Integration Testing</title>
+<style>
+  :root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --fg: #c9d1d9; --fg2: #8b949e; --accent: #58a6ff; --gold: #ffd700; --green: #32cd32; --orange: #ff9966; --red: #f85149; --purple: #a371f7; --border: #30363d; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; margin: 0; padding: 0; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  h1 { font-size: 2rem; color: var(--gold); margin-bottom: 0.3em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin-top: 2em; border-left: 4px solid var(--accent); padding-left: 12px; }
+  h3 { font-size: 1.1rem; color: var(--purple); margin-top: 1.5em; }
+  .subtitle { color: var(--fg2); font-size: 1.05rem; margin-bottom: 2em; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+  code, pre { font-family: 'Consolas', 'Monaco', monospace; background: var(--bg3); border-radius: 6px; }
+  code { padding: 2px 6px; font-size: 0.9em; }
+  pre { padding: 16px; overflow-x: auto; font-size: 0.85rem; border: 1px solid var(--border); }
+  .highlight { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; }
+  .warning { background: rgba(248,81,73,0.1); border-left: 3px solid var(--red); }
+  .success { background: rgba(50,205,50,0.1); border-left: 3px solid var(--green); }
+  .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .nav a { text-decoration: none; color: var(--fg2); padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; transition: all 0.2s; }
+  .nav a:hover { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .nav a.active { color: var(--gold); border-color: var(--gold); background: rgba(255,215,0,0.08); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--accent); font-weight: 600; }
+  tr:hover { background: rgba(255,255,255,0.03); }
+  .pass { color: var(--green); font-weight: bold; }
+  .fail { color: var(--red); font-weight: bold; }
+  .pending { color: var(--orange); font-weight: bold; }
+  .test-row td:first-child { font-family: monospace; font-size: 0.9em; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🧪 Step 8 — Integration Testing</h1>
+<p class="subtitle">Complete V3 feature matrix. Run these tests before committing. Record results in docs/V3_TEST_RESULTS.md.</p>
+
+<div class="nav">
+  <a href="step-00-project-overview.html">00. Overview</a>
+  <a href="step-01-hotkeys.html">01. Hotkeys</a>
+  <a href="step-02-workbench.html">02. Workbench</a>
+  <a href="step-03-history-panel.html">03. History Panel</a>
+  <a href="step-04-transfers.html">04. Transfers</a>
+  <a href="step-05-orderly-mode.html">05. Orderly Mode</a>
+  <a href="step-06-snippets.html">06. Snippets</a>
+  <a href="step-07-boot-service.html">07. Boot Service</a>
+  <a href="step-08-testing.html" class="active">08. Testing</a>
+</div>
+
+<h2>📋 V3 Feature Test Matrix</h2>
+
+<h3>Phase 1: Core Invariants (MUST PASS)</h3>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Test</th><th>Action</th><th>Expected</th><th>Status</th></tr>
+    <tr class="test-row"><td>H1</td><td>Left hotkey copy</td><td>LCtrl+LAlt+3</td><td>Desktop toast: "LEFT COMBO → COPY SLOT 03"</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>H2</td><td>Right hotkey paste</td><td>RCtrl+RAlt+3</td><td>Slot 3 content pastes into active window</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>H3</td><td>Terminal paste</td><td>RCtrl+RAlt+3 in terminal</td><td>Pastes with ctrl+shift+v</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>H4</td><td>Slot 10 (key 0)</td><td>LCtrl+LAlt+0</td><td>Copy to slot 10</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>B1</td><td>Single instance</td><td>Try starting second instance</td><td>Exits immediately with "Another instance is already running"</td><td class="pending">□</td></tr>
+  </table>
+</div>
+
+<h3>Phase 2: History Panel</h3>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Test</th><th>Action</th><th>Expected</th><th>Status</th></tr>
+    <tr class="test-row"><td>C1</td><td>History loads</td><td>Start multiclip</td><td>History panel shows entries (or "No history yet" if empty)</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C2</td><td>Live refresh</td><td>Copy text in another app, wait 3s</td><td>New entry appears in history panel</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C3</td><td>Pagination</td><td>Have >50 items, click Next</td><td>Shows page 2, Prev button enables</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C4</td><td>Preview popup</td><td>Double-click an entry</td><td>Popup opens with full text</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C5</td><td>Popup close</td><td>Click X / Escape / click outside</td><td>Popup closes</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C6</td><td>Popup Single mode</td><td>Prev/Next buttons in popup</td><td>Cycles through selected items</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C7</td><td>Popup Show All</td><td>Switch to "Show All" mode</td><td>All items stacked with dividers</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>C8</td><td>Popup transfer</td><td>Enter slot 7, click Transfer</td><td>Slot 7 gets content, popup stays open</td><td class="pending">□</td></tr>
+  </table>
+</div>
+
+<h3>Phase 3: Transfers</h3>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Test</th><th>Action</th><th>Expected</th><th>Status</th></tr>
+    <tr class="test-row"><td>T1</td><td>Block Bundle</td><td>Select 3 items → Block Bundle</td><td>3 empty slots filled, gold flash</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>T2</td><td>1 slot per line (Auto)</td><td>Mode=Auto, select 2 items → 1 slot per line</td><td>Next 2 empty slots filled</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>T3</td><td>1 slot per line (Manual)</td><td>Mode=Manual, click slot 10, select 2 items</td><td>Slots 10 and 11 filled</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>T4</td><td>Slots full dialog</td><td>Fill all 30, attempt transfer</td><td>"SLOTS FULL" dialog appears</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>T5</td><td>Lock selection</td><td>Select items, click Lock, change page, select more, transfer</td><td>All locked + current items transfer</td><td class="pending">□</td></tr>
+  </table>
+</div>
+
+<h3>Phase 4: Orderly Mode</h3>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Test</th><th>Action</th><th>Expected</th><th>Status</th></tr>
+    <tr class="test-row"><td>O1</td><td>Activate Orderly</td><td>Click "Orderly" radio</td><td>Monitor starts, FIFO/LIFO buttons appear</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O2</td><td>Auto-capture</td><td>Copy text in another app</td><td>Slot 1 fills, gold flash, copy cursor moves to slot 2 (orange)</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O3</td><td>Multi-capture</td><td>Copy 5 different texts</td><td>Slots 1-5 filled, copy cursor at slot 6</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O4</td><td>FIFO paste</td><td>Click "Paste Next" 3 times</td><td>Pastes slots 1, 2, 3. Paste cursor at slot 4 (green)</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O5</td><td>LIFO paste</td><td>Click "LIFO", click "Paste Next"</td><td>Pastes most recently filled slot</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O6</td><td>Wrap-around</td><td>Fill slots 1-30, copy one more</td><td>Slot 1 overwrites, wrap count increments</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O7</td><td>Independent cursors</td><td>Copy 10 items, paste 3, copy 5 more</td><td>Paste cursor stays at 4, copy cursor at 16</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O8</td><td>GUI suppression</td><td>Type in MultiClip entry while Orderly active</td><td>Nothing auto-captures</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>O9</td><td>Deactivate</td><td>Click "Multiclip" radio</td><td>Monitor stops, highlights clear</td><td class="pending">□</td></tr>
+  </table>
+</div>
+
+<h3>Phase 5: Snippets</h3>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Test</th><th>Action</th><th>Expected</th><th>Status</th></tr>
+    <tr class="test-row"><td>S1</td><td>Save snippet</td><td>Type in S3, click Save</td><td>Toast "Snippet S3 saved", snippets.json updated</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>S2</td><td>Persist across restart</td><td>Save S3, restart multiclip</td><td>S3 still shows saved text</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>S3</td><td>X remove</td><td>Click X on S3</td><td>Entry clears, snippets.json updated</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>S4</td><td>Send to Snippet</td><td>Select history item → Send to Snippet</td><td>First empty snippet gets content, green flash</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>S5</td><td>Snippets full</td><td>Fill all 8, try Send to Snippet</td><td>"Snippets Full" warning dialog</td><td class="pending">□</td></tr>
+  </table>
+</div>
+
+<h3>Phase 6: Boot Service</h3>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Test</th><th>Action</th><th>Expected</th><th>Status</th></tr>
+    <tr class="test-row"><td>B1</td><td>Manual start</td><td>sudo /etc/init.d/multiclip start</td><td>UI loads, exactly one process</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>B2</td><td>Boot auto-start</td><td>sudo reboot, wait, login</td><td>One multiclip process auto-starts</td><td class="pending">□</td></tr>
+    <tr class="test-row"><td>B3</td><td>No duplicates</td><td>ps aux | grep multiclip</td><td>Exactly ONE python3 multiclip.py</td><td class="pending">□</td></tr>
+  </table>
+</div>
+
+<h2>📝 Test Results Template</h2>
+<div class="card">
+  <p>Create <code>docs/V3_TEST_RESULTS.md</code> with this format:</p>
+  <pre># V3 Integration Test Results
+**Date:** 2026-05-XX
+**Tester:** [your name]
+**MultiClip Version:** V3
+
+## Summary
+- Passed: X / Y
+- Failed: Z
+- Skipped: W
+
+## Detailed Results
+
+### Phase 1: Core Hotkeys
+| Test | Status | Notes |
+|------|--------|-------|
+| H1 | ✅ PASS | Toast appeared correctly |
+| H2 | ✅ PASS | Pasted into mousepad |
+| ... | | |
+
+### Phase 2: History Panel
+...
+
+### Known Issues
+- [Issue description and repro steps]
+
+### Sign-off
+- [ ] All core hotkeys pass
+- [ ] All transfer modes pass
+- [ ] Orderly mode passes
+- [ ] Boot service passes</pre>
+</div>
+
+<h2>🔧 Automated Pre-Tests</h2>
+<div class="card">
+  <p>Run these before manual testing:</p>
+  <pre># Syntax check
+python3 -m py_compile multiclip.py gui/main_window.py shared/*.py
+
+# JSON validity
+python3 -c "import json; json.load(open('clipboard_dict.json')); print('slots OK')"
+python3 -c "import json; json.load(open('snippets.json')); print('snippets OK')"
+
+# Monitor import test
+python3 -c "from shared.hybrid_clipboard_monitor import HybridClipboardMonitor; m=HybridClipboardMonitor(); m.stop(); print('monitor OK')"
+
+# UI load test
+python3 -c "from gui.main_window import MainWindow; w=MainWindow(); w.root.destroy(); print('UI OK')"</pre>
+</div>
+
+<div class="card success">
+  <strong>When ALL tests pass:</strong>
+  <pre>git add -A
+git commit -m "V3 implementation complete — [date]"
+# Tag it:
+git tag v3.0</pre>
+</div>
+
+<div class="highlight">
+  <strong>Complete guide set:</strong> All 9 HTML files are in <code>docs/guides/</code>. Open any file in a browser to navigate between steps.
+</div>
+
+</div>
+</body>
+</html>

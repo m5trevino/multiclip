@@ -1,0 +1,56 @@
+graph TD
+    subgraph External["External Dependencies"]
+        PYCLIP[pyperclip >=1.8.2]
+        PYAUTO[pyautogui >=0.9.54]
+        PYNPUT[pynput >=1.7.6]
+        TK[tkinter stdlib]
+        JSON[json stdlib]
+        DIFF[difflib stdlib]
+        FCTL[fcntl stdlib]
+        SUBP[subprocess stdlib]
+        SIGNAL[signal / atexit stdlib]
+    end
+
+    subgraph Internal["Internal Modules"]
+        MCLIP[multiclip.py]
+        MW[gui/main_window.py]
+        HP[gui/history_panel.py]
+        CP[shared/clipman_parser.py]
+        CM[shared/clipboard_manager.py]
+        SM[shared/snippets_manager.py]
+        CFG[shared/config_manager.py]
+        DM[diff_marker/diff_manager.py]
+        DI[diff_marker/diff_interface.py]
+        DT[diff_marker/diff_types.py]
+        CLI[clipman_cli.py]
+    end
+
+    MCLIP -->|uses| PYCLIP
+    MCLIP -->|uses| PYAUTO
+    MCLIP -->|uses| PYNPUT
+    MCLIP -->|imports| CP
+    MCLIP -->|imports| MW
+    MCLIP -->|uses| SUBP
+    MCLIP -->|uses| FCTL
+    MCLIP -->|uses| SIGNAL
+
+    MW -->|uses| TK
+    MW -->|imports| HP
+    MW -->|imports| CM
+    MW -->|imports| SM
+
+    HP -->|uses| TK
+
+    CP -->|uses| JSON
+
+    DM -->|uses| DIFF
+    DI -->|imports| DM
+    DI -->|imports| DT
+    DI -->|uses| PYCLIP
+
+    CLI -->|imports| CP
+    CLI -->|uses| JSON
+
+    CM -->|uses| JSON
+    SM -->|uses| JSON
+    CFG -->|uses| JSON

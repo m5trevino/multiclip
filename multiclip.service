@@ -1,0 +1,23 @@
+[Unit]
+Description=MultiClip V2 Industrial Workstation Service
+After=network.target graphical.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/flintx/multiclip
+
+# Access the user's X11 session
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/flintx/.Xauthority
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=HOME=/home/flintx
+
+# Executable from the virtual environment
+ExecStart=/home/flintx/multiclip/.venv/bin/python /home/flintx/multiclip/multiclip.py
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

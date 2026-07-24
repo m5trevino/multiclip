@@ -1,0 +1,47 @@
+%% MultiClip Current Reality vs Aspirational Direction
+%% Dark mode friendly
+
+graph TD
+    classDef living fill:#0f2a1f,stroke:#22c55e,color:#a3e635,stroke-width:2px;
+    classDef dead fill:#2a1515,stroke:#ef4444,color:#f87171;
+    classDef aspirational fill:#1a2333,stroke:#3b82f6,color:#93c5fd,stroke-dasharray: 5 3;
+    classDef external fill:#1f2937,stroke:#6b7280,color:#9ca3af;
+
+    subgraph REALITY["CURRENT REALITY (What Actually Boots)"]
+        CORE[multiclip.py<br/>Self-contained core<br/>Raw pynput L/R + xdotool paste]:::living
+        SLOTS[Simple 30-slot JSON]:::living
+        BASIC_UI[Minimal Tk 30-row list]:::living
+    end
+
+    subgraph ORPHANED["ORPHANED GOSPEL ASSETS"]
+        OLD_PARSER[shared/clipman_parser.py<br/>State-machine parser]:::dead
+        OLD_UI[gui/main_window.py<br/>Dense industrial UI]:::dead
+        OLD_VAULT[snippets_manager + Vault]:::dead
+    end
+
+    subgraph EXTERNAL["EXTERNAL SYSTEMS"]
+        CLIPMAN[(~/.cache/xfce4/clipman/textsrc<br/>Live, noisy, mutating log)]:::external
+    end
+
+    subgraph ASPIRATIONAL["NEW VISION (User Mandate)"]
+        HISTORY_MODE[Clipman History Browser<br/>View + Curate + Order]:::aspirational
+        SEQUENCER[User-defined Sequences<br/>+ Selections]:::aspirational
+        SEQ_PASTE[Sequential Walk<br/>One trigger = next in order]:::aspirational
+        BATCH_PASTE[Batch Paste<br/>Selected items in click order]:::aspirational
+    end
+
+    CLIPMAN -->|Currently unwired| OLD_PARSER
+    CORE --> SLOTS
+    CORE --> BASIC_UI
+
+    HISTORY_MODE -.->|Future| SEQUENCER
+    SEQUENCER -.->|Future| SEQ_PASTE
+    SEQUENCER -.->|Future| BATCH_PASTE
+
+    SEQ_PASTE -.->|Must reuse| CORE
+    BATCH_PASTE -.->|Must reuse| CORE
+
+    style REALITY fill:#052e16,stroke:#166534
+    style ORPHANED fill:#3f1f1f,stroke:#7f1d1d
+    style ASPIRATIONAL fill:#1e3a8a,stroke:#1e40af,stroke-dasharray: 4 2
+    style EXTERNAL fill:#111827,stroke:#374151

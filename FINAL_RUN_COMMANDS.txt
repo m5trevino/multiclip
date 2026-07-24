@@ -1,0 +1,103 @@
+================================================================================
+MULTICLIP V2 - FINAL WORKING COMMANDS (REHAB)
+MX Linux + sysVinit + root boot
+================================================================================
+
+This file exists so you can read + copy commands without the app stealing
+your clipboard. Open it in Sublime or cat it.
+
+--------------------------------------------------------------------------------
+1. KILL EVERYTHING FIRST (always do this before testing)
+--------------------------------------------------------------------------------
+
+pkill -f "multiclip.py|test_hotkeys|test_modifiers" || true
+
+--------------------------------------------------------------------------------
+2. MAKE SURE PACKAGES ARE INSTALLED IN THIS VENV
+--------------------------------------------------------------------------------
+
+.venv/bin/pip install -r requirements.txt
+
+--------------------------------------------------------------------------------
+3. RUN THE APP FOR TESTING (THE ONLY COMMAND THAT MATTERS RIGHT NOW)
+--------------------------------------------------------------------------------
+
+.venv/bin/python multiclip.py
+
+# While this is running you will see live debug in the terminal:
+# [HOTKEY] raw mods=... 
+#   → DECISION: PASTE slot X
+# [PASTE-EXEC] ...
+
+--------------------------------------------------------------------------------
+4. HOW TO TEST COPY + PASTE RIGHT NOW
+--------------------------------------------------------------------------------
+
+- Use Left Ctrl + Left Alt + number   → copies selection into that slot
+- Use Right Ctrl + Right Alt + number  → should PASTE that slot into the focused app
+
+Watch the terminal that launched the app. It will print every decision + whether
+it used xdotool or fell back.
+
+If paste still does nothing in the target window, copy the last 20 lines of
+debug from the terminal and send them.
+
+--------------------------------------------------------------------------------
+5. BOOT SETUP (run as root once the hotkeys actually work)
+--------------------------------------------------------------------------------
+
+# Option A - quick & dirty (append to rc.local)
+sudo tee -a /etc/rc.local > /dev/null << 'RCEOF'
+sleep 8
+export DISPLAY=:0
+export XAUTHORITY=/home/flintx/.Xauthority
+export XDG_RUNTIME_DIR=/run/user/1000
+export HOME=/home/flintx
+cd /home/flintx/multiclip
+nohup .venv/bin/python multiclip.py >> /var/log/multiclip.log 2>&1 &
+RCEOF
+
+sudo chmod +x /etc/rc.local
+
+# Option B - proper sysvinit script (recommended)
+sudo cp multiclip-init.d /etc/init.d/multiclip
+sudo chmod +x /etc/init.d/multiclip
+sudo update-rc.d multiclip defaults
+
+# Start it manually to test
+sudo /etc/init.d/multiclip start
+
+# Watch logs
+tail -f /var/log/multiclip.log
+
+--------------------------------------------------------------------------------
+6. USEFUL ONE-LINERS
+--------------------------------------------------------------------------------
+
+# View live logs
+tail -f /var/log/multiclip.log
+
+# Restart the service (if using init.d)
+sudo /etc/init.d/multiclip restart
+
+# Check if xdotool is installed (required for reliable paste as root)
+which xdotool || sudo apt install xdotool
+
+# Force kill if the app gets stuck holding hotkeys
+pkill -9 -f multiclip
+
+--------------------------------------------------------------------------------
+7. CURRENT STATE (as of last update)
+--------------------------------------------------------------------------------
+
+- Copy (Left Ctrl+Left Alt + 1-0) works
+- Right Ctrl+Right Alt + 1-0 now correctly decides "PASTE"
+- Paste injection upgraded to try xdotool first (more reliable under root)
+- Live debug prints in terminal so we can see exactly what is happening
+
+If after running with .venv/bin/python you still get no actual paste in other
+windows, paste the debug lines that contain [PASTE-EXEC] or [PASTE-ERROR].
+
+================================================================================
+END OF FILE - open this in subl or cat it when you can't copy from chat
+================================================================================

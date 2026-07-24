@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 3 — Clipman History Panel</title>
+<style>
+  :root { --bg: #0d1117; --bg2: #161b22; --bg3: #21262d; --fg: #c9d1d9; --fg2: #8b949e; --accent: #58a6ff; --gold: #ffd700; --green: #32cd32; --orange: #ff9966; --red: #f85149; --purple: #a371f7; --border: #30363d; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; margin: 0; padding: 0; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  h1 { font-size: 2rem; color: var(--gold); margin-bottom: 0.3em; border-bottom: 2px solid var(--border); padding-bottom: 0.3em; }
+  h2 { font-size: 1.4rem; color: var(--accent); margin-top: 2em; border-left: 4px solid var(--accent); padding-left: 12px; }
+  h3 { font-size: 1.1rem; color: var(--purple); margin-top: 1.5em; }
+  .subtitle { color: var(--fg2); font-size: 1.05rem; margin-bottom: 2em; }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 15px 0; }
+  code, pre { font-family: 'Consolas', 'Monaco', monospace; background: var(--bg3); border-radius: 6px; }
+  code { padding: 2px 6px; font-size: 0.9em; }
+  pre { padding: 16px; overflow-x: auto; font-size: 0.85rem; border: 1px solid var(--border); }
+  .highlight { background: rgba(88,166,255,0.1); border-left: 3px solid var(--accent); padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; }
+  .warning { background: rgba(248,81,73,0.1); border-left: 3px solid var(--red); }
+  .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+  .nav a { text-decoration: none; color: var(--fg2); padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; transition: all 0.2s; }
+  .nav a:hover { color: var(--accent); border-color: var(--accent); background: rgba(88,166,255,0.08); }
+  .nav a.active { color: var(--gold); border-color: var(--gold); background: rgba(255,215,0,0.08); }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.95rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg3); color: var(--accent); font-weight: 600; }
+  tr:hover { background: rgba(255,255,255,0.03); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>📜 Step 3 — Clipman History Panel</h1>
+<p class="subtitle">Live clipboard history with pagination, preview popup, and transfer buttons. Self-owned JSON — no more textsrc wipes.</p>
+
+<div class="nav">
+  <a href="step-00-project-overview.html">00. Overview</a>
+  <a href="step-01-hotkeys.html">01. Hotkeys</a>
+  <a href="step-02-workbench.html">02. Workbench</a>
+  <a href="step-03-history-panel.html" class="active">03. History Panel</a>
+  <a href="step-04-transfers.html">04. Transfers</a>
+  <a href="step-05-orderly-mode.html">05. Orderly Mode</a>
+  <a href="step-06-snippets.html">06. Snippets</a>
+  <a href="step-07-boot-service.html">07. Boot Service</a>
+  <a href="step-08-testing.html">08. Testing</a>
+</div>
+
+<h2>📦 Architecture Change: textsrc → Self-Owned JSON</h2>
+<div class="card">
+  <table>
+    <tr><th>Aspect</th><th>OLD (textsrc)</th><th>NEW (HybridClipboardMonitor)</th></tr>
+    <tr><td>Source</td><td><code>~/.cache/xfce4/clipman/textsrc</code></td><td><code>~/.cache/multiclip/clipboard_history.json</code></td></tr>
+    <tr><td>Capture</td><td>File-based polling only</td><td>pynput Ctrl+C detection + 1s poll fallback</td></tr>
+    <tr><td>Reliability</td><td>❌ Wiped by xfce4-clipman on crash/restart</td><td>✅ Fully controlled by MultiClip</td></tr>
+    <tr><td>Format</td><td>Escaped semicolon-delimited text</td><td>Clean JSON array</td></tr>
+    <tr><td>Parser</td><td><code>shared/clipman_parser.py</code> (state machine)</td><td><code>shared/hybrid_clipboard_monitor.py</code></td></tr>
+  </table>
+</div>
+
+<div class="card warning">
+  <strong>Why textsrc was abandoned:</strong> xfce4-clipman's <code>plugin_save()</code> in C does a <code>g_unlink()</code> loop that deletes <strong>every file</strong> in <code>~/.cache/xfce4/clipman/</code> before re-saving. If in-memory history is empty, textsrc is wiped permanently. This happened to the user repeatedly.
+</div>
+
+<h2>🔧 HybridClipboardMonitor</h2>
+<div class="card">
+  <h3>Dual Capture Strategy</h3>
+  <pre>┌─────────────────────────────────────────┐
+│  HybridClipboardMonitor                 │
+│  ├─ pynput keyboard listener            │
+│  │   └─ Detects Ctrl+C → waits 100ms    │
+│  │      → reads pyperclip → saves       │
+│  ├─ Poll thread (every 1s)              │
+│  │   └─ Catches right-click/menu copies │
+│  └─ JSON persistence                    │
+│      └─ ~/.cache/multiclip/history.json │
+└─────────────────────────────────────────┘</pre>
+
+  <h3>MonitorEntry Object</h3>
+  <pre>class MonitorEntry:
+    id: int              # Sequential ID
+    decoded_content: str # Full text content
+    preview: str         # First 80 chars
+    word_count: int      # Word count</pre>
+
+  <h3>Compatible Interface (drop-in for ClipmanParser)</h3>
+  <pre>monitor = HybridClipboardMonitor()
+entries = monitor.parse(max_entries=9999)   # All history
+recent = monitor.get_recent(80)              # Last 80 items
+
+# filepath attribute for mtime polling
+mtime = os.path.getmtime(monitor.filepath)</pre>
+</div>
+
+<h2>📜 History Panel UI</h2>
+<div class="card">
+  <h3>Components</h3>
+  <table>
+    <tr><th>Widget</th><th>Purpose</th></tr>
+    <tr><td><strong>Listbox</strong></td><td>Scrollable list of history entries (50 per page)</td></tr>
+    <tr><td><strong>Scrollbar</strong></td><td>Vertical scroll for the listbox</td></tr>
+    <tr><td><strong>Prev button</strong></td><td>Go to previous page</td></tr>
+    <tr><td><strong>Page label</strong></td><td>Shows "Page X/Y"</td></tr>
+    <tr><td><strong>Next button</strong></td><td>Go to next page</td></tr>
+    <tr><td><strong>Lock Selection</strong></td><td>Locks selected items across page changes</td></tr>
+    <tr><td><strong>Block Bundle</strong></td><td>Transfer selected items as batch</td></tr>
+    <tr><td><strong>1 slot per line</strong></td><td>Transfer each selected item to its own slot</td></tr>
+  </table>
+</div>
+
+<h2>📄 Pagination Code</h2>
+<div class="card">
+  <h3>set_clipman_entries() — line 528</h3>
+  <pre>def set_clipman_entries(self, entries: list):
+    self.clipman_all_entries = list(entries)
+    self.clipman_current_page = 0
+    self.clipman_page_size = 50
+    self._update_clipman_page_display()</pre>
+
+  <h3>_update_clipman_page_display() — line 535</h3>
+  <pre>def _update_clipman_page_display(self):
+    self.clipman_listbox.delete(0, tk.END)
+    start = self.clipman_current_page * self.clipman_page_size
+    end = start + self.clipman_page_size
+    page_entries = self.clipman_all_entries[start:end]
+    for e in page_entries:
+        preview = e.preview if hasattr(e, 'preview') else str(e)[:80]
+        self.clipman_listbox.insert(tk.END, preview)
+
+    total_pages = max(1, (len(self.clipman_all_entries) + self.clipman_page_size - 1) // self.clipman_page_size)
+    self.clipman_page_label.config(text=f"Page {self.clipman_current_page + 1}/{total_pages}")
+
+    # Disable prev/next when at boundaries
+    self.clipman_prev_btn.config(state='normal' if self.clipman_current_page > 0 else 'disabled')
+    self.clipman_next_btn.config(state='normal' if self.clipman_current_page < total_pages - 1 else 'disabled')</pre>
+</div>
+
+<h2>🔄 Live Refresh</h2>
+<div class="card">
+  <p>The panel auto-refreshes every 3 seconds by polling the JSON file's mtime:</p>
+  <pre>def start_live_clipman_refresh(self, parser, interval_ms=3000):
+    self._clipman_parser = parser
+    self._clipman_interval = interval_ms
+    self._clipman_last_mtime = 0
+    self._poll_clipman()
+
+def _poll_clipman(self):
+    filepath = getattr(self._clipman_parser, 'filepath', None)
+    if filepath and os.path.exists(filepath):
+        mtime = os.path.getmtime(filepath)
+        if mtime != self._clipman_last_mtime:
+            self._clipman_last_mtime = mtime
+            entries = self._clipman_parser.get_recent(80)
+            self.set_clipman_entries(entries)
+            print(f"[CLIPMAN] Auto-refreshed: {len(entries)} entries")
+    # Schedule next poll
+    self.root.after(self._clipman_interval, self._poll_clipman)</pre>
+</div>
+
+<h2>🔍 Preview Popup (ClipmanPreviewPopup)</h2>
+<div class="card">
+  <h3>Features</h3>
+  <table>
+    <tr><th>Feature</th><th>Behavior</th></tr>
+    <tr><td><strong>Trigger</strong></td><td>Double-click any listbox item</td></tr>
+    <tr><td><strong>Single mode</strong></td><td>Prev/Next buttons cycle through selected items</td></tr>
+    <tr><td><strong>Show All mode</strong></td><td>All selected items stacked with dividers</td></tr>
+    <tr><td><strong>Close methods</strong></td><td>X button, Escape key, click outside popup, focus out</td></tr>
+    <tr><td><strong>Transfer bar</strong></td><td>Slot spinbox (1-30) + Transfer button</td></tr>
+  </table>
+
+  <h3>Transfer from Preview Popup</h3>
+  <pre># In multiclip.py
+def _transfer_single_to_slot(self, slot: int, content: str):
+    if 1 <= slot <= 30:
+        self.slots[str(slot)] = content
+        self.save_slots()
+        self.ui.slot_displays[slot-1].update_content(content, preview)
+        self.ui.flash_slot(slot-1)
+        self.show_toast(f"Transferred to Slot {slot:02d}", preview)</pre>
+</div>
+
+<h2>🔒 Lock Selection</h2>
+<div class="card">
+  <p>The "Lock Selection" button allows selecting items across multiple pages:</p>
+  <pre>def _on_clipman_lock(self):
+    full_indices = self._get_clipman_selected_full_indices()
+    self.locked_groups.append(full_indices)
+    # Visual feedback: prefix [LOCKED] to selected items
+    for idx in full_indices:
+        if start <= idx < start + self.clipman_page_size:
+            lb_idx = idx - start
+            current_text = self.clipman_listbox.get(lb_idx)
+            if not current_text.startswith("[LOCKED]"):
+                self.clipman_listbox.delete(lb_idx)
+                self.clipman_listbox.insert(lb_idx, "[LOCKED] " + current_text)</pre>
+  <p>Locked items are included when "Block Bundle" or "1 slot per line" is clicked via <code>_get_all_selected_entries()</code>.</p>
+</div>
+
+<h2>🧪 Testing History Panel</h2>
+<div class="card">
+  <pre># 1. Start multiclip
+sudo /etc/init.d/multiclip start
+
+# 2. Copy some text in another app (Ctrl+C)
+#    → Wait 3 seconds
+#    → History panel should update with new entry
+
+# 3. Navigate pages with Prev/Next buttons
+
+# 4. Double-click an entry → Preview popup opens
+#    → Try Single mode (Prev/Next)
+#    → Try Show All mode
+#    → Close via X, Escape, or click outside
+
+# 5. Select multiple items → Click "Block Bundle"
+#    → Items should fill empty workbench slots
+
+# 6. Select items → Click "1 slot per line"
+#    → Each item should get its own slot
+
+# 7. Check history JSON
+python3 -c "import json; d=json.load(open('/home/flintx/.cache/multiclip/clipboard_history.json')); print(f'{len(d)} entries')"</pre>
+</div>
+
+<div class="highlight">
+  <strong>Next:</strong> <a href="step-04-transfers.html" style="color:var(--accent);">Step 4 — Transfer System</a>
+</div>
+
+</div>
+</body>
+</html>

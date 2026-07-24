@@ -1,0 +1,23 @@
+graph LR
+    subgraph High["HIGH Cognitive Load"]
+        A[gui/main_window.py<br/>835 lines<br/>Dense UI wiring + callbacks + Clipman integration]
+        B[multiclip.py<br/>408 lines<br/>Hotkey state machine + root boot concerns + xdotool fallback]
+    end
+
+    subgraph Medium["MEDIUM Cognitive Load"]
+        C[diff_marker/diff_interface.py<br/>382 lines<br/>Two-panel UI + diff rendering + slot dialogs]
+        D[clipman_cli.py<br/>325 lines<br/>Curses UI + pagination + ordered selection]
+        E[gui/history_panel.py<br/>360 lines<br/>Canvas scrolling + selection state + search]
+    end
+
+    subgraph Low["LOW Cognitive Load"]
+        F[shared/clipman_parser.py<br/>157 lines<br/>Clean parser — well-scoped]
+        G[shared/config_manager.py<br/>132 lines<br/>JSON config with defaults]
+        H[shared/clipboard_manager.py<br/>47 lines<br/>Simple slot container]
+        I[shared/snippets_manager.py<br/>46 lines<br/>Dict wrapper]
+        J[diff_marker/diff_types.py<br/>45 lines<br/>Dataclass definitions]
+        K[diff_marker/diff_manager.py<br/>102 lines<br/>difflib wrapper]
+    end
+
+    High -.->|Orphaned / Historical| Medium
+    Medium -.->|Depends on| Low

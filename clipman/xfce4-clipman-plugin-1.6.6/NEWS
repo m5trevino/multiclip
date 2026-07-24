@@ -1,0 +1,379 @@
+1.6.6 (2024-02-29)
+=====
+- Update copyright year
+- Use X11 clipboard manager from libxfce4ui if available
+- collector: Fix sanity check
+- history: Make search case-sensitive
+- actions: Update gimp command (Fixes #96)
+- build: Use system wlr-protocols if avail or fall back to submodule
+- clipboard-manager: Add missing static qualifier
+- build: Lower xfce4-dev-tools requirements to stable version
+- Fix xfce_titled_dialog_create_action_area() deprecation
+- build: Simplify and clarify X11/Wayland distinction
+- build: Define our own windowing macro instead of extending GDK's
+- build: Add check for gdk-wayland
+- Translation Updates:
+  Catalan, Estonian, Finnish, Hebrew, Italian, Russian, Spanish,
+  Swedish, Turkish
+
+1.6.5 (2023-09-29)
+=====
+- wayland: Hide skip-action-on-key-down setting
+- wayland: Hide persistent-primary-clipboard setting
+- Add set-text action to plugin app to allow D-Bus calls
+- Add Wayland impl for clipboard-manager
+- Make clipboard manager an interface and add X11 impl
+- Rename x11-clipboard-manager to clipboard-manager
+- Move paste_on_activate() to common
+- Make X11 dependencies optional and guard X11 code paths
+- cleanup: Remove unused project files
+- cleanup: Remove useless variable assignment
+- tests: Add missing include
+- history-dialog: Fix memory leak
+- ui: Mark 2 strings translatable
+- history-dialog: Keep paste-on-activate in sync with the settings (V2)
+- settings: Fix tooltip text
+- status-icon: Enable tooltip
+- status-icon: Add missing sanity check
+- popup-clipman: Replace deprecated gdk_keyboard_grab()
+- Replace deprecated gtk_menu_popup() when possible
+- collector: Do not restore default clipboard if not really empty
+- menu: Fix translated string
+- Update URLs
+- Translation Updates:
+  Albanian, Armenian (Armenia), Basque, Belarusian, Bulgarian, Catalan,
+  Chinese (China), Chinese (Taiwan), Croatian, Czech, Danish, Dutch,
+  Eastern Armenian, English (Australia), English (United Kingdom),
+  Estonian, Finnish, French, Galician, German, Greek, Hebrew,
+  Hungarian, Icelandic, Indonesian, Interlingue, Italian, Japanese,
+  Kazakh, Korean, Lithuanian, Malay, Norwegian Bokmål, Occitan (post
+  1500), Polish, Portuguese, Portuguese (Brazil), Russian, Serbian,
+  Slovak, Slovenian, Spanish, Swedish, Thai, Turkish, Ukrainian
+
+1.6.4 (2023-07-31)
+=====
+- history-dialog: Fix memory leak
+- history-dialog: Keep paste-on-activate in sync with the settings
+- history-dialog: Remove useless creation/destruction of menu
+- Simplify main app creation
+- history-dialog: Better fit with the way GApplication works
+- settings: Remove wrong signal handler
+- settings: Better fit with the way GApplication works
+- popup-clipman: Enable translations
+- popup-clipman: Properly use GApplication
+- Move default clipboard restoration from manager to collector
+- gsd-clipboard: Add missing sanity check
+- Remove dead code
+- menu: Add some icons
+- history: Clear history when it's disabled
+- menu: Shift entries in reverse order
+- Revert "Enable reverse-order option"
+- menu: Improve management of clear history entries
+- menu: Improve management of primary clipboard entry
+- history: Refactor item_to_restore into image_to_restore
+- settings: Align paste-on-activate combo like other widgets
+- collector: Properly sync primary clipboard when default is empty
+- collector: Fix primary timeout management
+- collector: Remove unused function
+- Make 'add-primary-clipboard' management internal to the collector
+- Make 'add-primary-clipboard' imply 'persistent-primary-clipboard'
+- settings: Fix 'skip-action-on-key-down' sync and improve strings
+- collector: Make actions work again for selections
+- collector: Fix memory leak
+- collector: Properly disconnect signal handlers
+- gsd-clipboard: Properly reset source id
+- menu: Fix crash when selecting QR code
+- Remove XfcePluggable from settings desktop file
+- build: tests: Fix compiler warnings
+- Translation Updates:
+  Albanian, Armenian (Armenia), Basque, Belarusian, Bulgarian, Catalan,
+  Chinese (China), Chinese (Taiwan), Croatian, Czech, Danish, Dutch,
+  Eastern Armenian, English (Australia), English (United Kingdom),
+  Estonian, Finnish, French, Galician, German, Greek, Hebrew,
+  Hungarian, Icelandic, Indonesian, Interlingue, Italian, Japanese,
+  Kazakh, Korean, Lithuanian, Malay, Norwegian Bokmål, Occitan (post
+  1500), Polish, Portuguese, Portuguese (Brazil), Russian, Serbian,
+  Slovak, Slovenian, Spanish, Swedish, Thai, Turkish, Ukrainian
+
+1.6.3 (2023-03-20)
+=====
+- Update copyright year and bug report address
+- history: Fix inactive copy button (Fixes #54)
+- Shorten the selection text in menu
+- Move text shorten code to common function
+- build: Fix autotools warnings
+- Allow to clear history when only selection is visible
+- Fix blurry images in plugin menu when UI scale > 1
+- Fix link in README
+- Remove ENABLE_NLS ifdefs
+- Update `.gitignore`
+- Add primary clipboard persistence
+- [PATCH] build: Fix intltool lock file problem during make distcheck
+- Fix text preview
+- Replace `g_malloc0()` with safer alternative `g_new0()`
+- Use `filename` before freeing it
+- Fix invalid "Show full history..." menu item behavior (#29)
+- Fix GLib macro expansion compiler warnings
+- Update copyright year
+- Check if already running before adding as panel plugin
+- Do not try to register application twice
+- Correctly handle a timeout source life cycle within a function
+- Fix Gtk-CRITICAL when showing main menu
+- Require glib 2.60
+- Translation Updates:
+  Albanian, Armenian (Armenia), Basque, Belarusian, Bulgarian, Catalan,
+  Chinese (China), Chinese (Taiwan), Croatian, Czech, Danish, Dutch,
+  Eastern Armenian, English (Australia), Estonian, Finnish, French,
+  Galician, German, Greek, Hebrew, Hungarian, Icelandic, Indonesian,
+  Interlingue, Italian, Japanese, Kazakh, Korean, Lithuanian, Malay,
+  Norwegian Bokmål, Occitan (post 1500), Polish, Portuguese,
+  Portuguese (Brazil), Russian, Serbian, Slovak, Slovenian, Spanish,
+  Swedish, Thai, Turkish, Ukrainian
+
+1.6.1
+======
+- Add translateable files to POTFILES (Bug #16608)
+- Bump libxfce4ui ifdef to 4.15.1
+- Translation Updates:
+  Albanian, Bulgarian, Catalan, Chinese (China), Danish, Dutch, French,
+  Galician, German, Italian, Japanese, Lithuanian, Norwegian Bokmål,
+  Polish, Portuguese, Russian, Spanish
+
+1.6.0
+======
+- Add standalone dialog to search history: xfce4-clipman-history
+- Don't delete the history on startup
+- plugin: Indicate if clipman is disabled (Bug #11381)
+- plugin: Bind middle-click to toggle "inhibit"
+- plugin: Add "Clipman settings..." menuitem
+- plugin: "Show full history..." menuitem
+- plugin: Wire up max-menu-items setting
+- settings: Make strings translatablei (Bug #16496)
+- settings: Improve responsiveness of actions tab
+- settings: Replace GtkStock icons and tweak actions dialog
+- settings: Revamp UI and add max-menu-items setting
+- settings: Further UI tweaks
+- daemon: Show info dialog if already running
+- Add warning if clipman is not running
+- Show info/warning dialogs if clipman is (not) running
+- Add clipman-settings desktop file
+- Replace deprecated g_type_class_add_private
+- Replace GtkStock items
+- Improve clipman autostart file
+- Update copyright
+- Update gitignore
+- Translation Updates:
+  Albanian, Belarusian, Bulgarian, Catalan, Chinese (China), Chinese
+  (Taiwan), Danish, Dutch, French, Galician, German, Hebrew, Hungarian,
+  Italian, Japanese, Lithuanian, Norwegian Bokmål, Polish, Portuguese,
+  Portuguese (Brazil), Russian, Serbian, Spanish, Turkish
+
+1.4.4
+======
+- settings: Improve layout
+- settings: Drop some GtkStock items
+- Update support URLs from goodies to docs.xfce.org (Bug #16141)
+- Drop deprecated Gtk style properties
+- Also show desktop file in Cinnamon (Bug #14058)
+- Fix getting modifier in gsd-clipboard-manager (Bug #14642)
+- Fix typo
+- Translation Updates:
+  Albanian, Armenian (Armenia), Belarusian, Catalan, Chinese (China),
+  Czech, Danish, Finnish, French, Galician, Hebrew, Icelandic, Italian,
+  Kazakh, Norwegian Bokmål, Polish, Portuguese, Slovak, Slovenian,
+  Spanish, Turkish, Ukrainian,
+
+Version 1.4.3 - 2018-10-27
+
+- Switch to xfce_panel_plugin_get_icon_size for consistent icon sizes
+- Make sure the "Disable" menuitem is shown in the panel plugin
+- Translation updates: Arabic, Asturian, Basque, Belarusian, Bulgarian,
+  Catalan, Chinese (China), Chinese (Taiwan), Croatian, Czech, Danish,
+  Dutch (Flemish), English (Australia), English (Great Britain), Finnish,
+  French, Galician, German, Greek, Hebrew, Hungarian, Icelandic, Indonesian,
+  Italian, Japanese, Kazakh, Korean, Latvian, Lithuanian, Malay, Norwegian
+  Bokmål, Occitan, Polish, Portuguese, Portuguese (Brazilian), Russian, Serbian,
+  Slovak, Slovenian, Spanish, Swedish, Thai, Turkish, Ukrainian, Urdu, Urdu
+  (Pakistan), Uyghur
+
+Version 1.4.2 - 2017-07-21
+
+- Port to GtkApplication
+  (this should help with keyboard shortcut issues)
+- Translation updates: Catalan, Croatian, Danish, Dutch (Flemish), Greek,
+  Indonesian, Italian, Kazakh, Lithuanian, Norwegian Bokmål, Serbian, Thai
+
+Version 1.4.1 - 2016-11-28
+
+- New application icon
+- Improve clipman panel plugin icon sizing (Bug #12854)
+- Add a non-symbolic fallback icon
+- Adjust menu geometry to fit all elements (Bug #12865)
+- Avoid 'bad symlink' warning. (Bug #12850)
+- Fix tooltip of show QR code (Bug #12752)
+- Translation updates: Chinese (China), Chinese (Taiwan), Croatian, Dutch
+  (Flemish), English (Australia), French, German, Hebrew, Icelandic, Japanese,
+  Korean, Lithuanian, Malay, Occitan, Polish, Portuguese, Portuguese (Brazilian),
+  Slovak, Spanish, Swedish, Ukrainia
+
+Version 1.4.0 - 2016-09-15
+
+- Port to Gtk3
+- Port to GtkApplication
+- Thanks to Eric, Steve and Florian for their contributions and support!
+- Translation updates: Asturian, Bulgarian, Catalan, Chinese (China), Chinese
+  (Taiwan), Croatian, Czech, Danish, Dutch (Flemish), English (Australia),
+  Finnish, French, German, Greek, Hebrew, Hungarian, Icelandic, Italian,
+  Japanese, Korean, Lithuanian, Malay, Norwegian Bokmål, Polish, Portuguese,
+  Portuguese (Brazilian), Russian, Serbian, Slovak, Slovenian, Spanish, Swedish,
+  Thai, Turkish, Ukrainian
+
+Version 1.2.6 - 2014-05-31
+
+- Include an .appdata.xml file
+- Switch to gtk_clipboard_request_text for retrieving text (bug 10225)
+- Position menu with XfceScreenPosition (bug 8849)
+- Update default action Long URL with whitespace \s
+- Fix link to online documentaion
+
+Version 1.2.5 - 2014-02-05
+
+- Set empty text on the clipboard when clearing history
+- Bind skip-action option on the correct radio button (setting was reversed)
+
+Version 1.2.4 - 2014-02-02
+
+- Removed doc submodule
+- Bug 10667: Define different menmonic
+- Bug 9528: QR-code encoder
+- Bug 9896: Move Disable item inside context/right-click menu
+- Bug 10506: Allow skipping actions by pressing or not CTRL
+
+Version 1.2.3 - 2012-04-09
+
+- Use new online documentation location http://docs.xfce.org/
+- Bug 8307: Handle images and texts as one stack
+- Bug 8523: Added a checkbox "Don't ask again" to clear the history
+- Bug 8403: Include rows support from Xfce Panel 4.9
+- Bug 8147: Don't terminate gtk_message_dialog_new_with_markup with NULL
+- Bug 8106: Use g_return_val_if_fail instead of g_return_if_fail
+
+Version 1.2.2 - 2011-11-01
+
+- Update build environment.
+  * Bug 8093: Add package check for xproto.
+  * Build libclipman with -avoid-version and -module.
+  * Bump Libtool version and disable static libraries (part of bug 6920).
+
+Version 1.2.1 - 2011-10-31
+
+- New options in the settings dialog under the tab "Tweaks".
+  * reorder-items: push or not the last copied text to the top of
+    history, default is set to true.
+  * skip-action-on-key-down: ignore matched actions when Ctrl is
+    pressed down at the end of the selection, default is set to
+    false.
+- Include existing hidden options in the "Tweaks" tab.
+- Use new Xfce Panel plugin installation location.
+
+Version 1.2.0 - 2011-10-24
+
+- Ported documentation to Mallard and moved it into the xfce4-docs repo.
+- Add optional build-dependency against XTEST to be able to paste content as
+  soon as it has been selected from the history. The setting is hidden under
+  /tweaks/paste-on-activate and is off by default. Its possible values are
+  0 for deactivated, 1 to paste with Ctrl+V and 2 to paste with Shift+Ins.
+- Add option "Reverse history order" inside the Settings dialog.
+- Add hidden setting /tweaks/popup-at-pointer, works only when triggered
+  through xfce4-popup-clipman.
+- Anchor the Regex pattern within ^<pattern>$, before it was only anchored
+  with ^<pattern>.
+- New Regex dialog available within the Action dialog that appears upon a click
+  on a button beneath the Action pattern to be able to test the Regex.
+- New "Reset" button in the Actions tab of the Settings dialog to reset the
+  actions with the one installed system-wide.
+- Bug 6633: Avoid multiple popups of the actions menu.
+- Bug 6323: Check instance types of GtkClipboard.
+- Bug 6324: Properly remove cache files on history clear.
+- Bug 6698: Use themed icon "clipman" or fallback to "edit-paste" for the panel
+  icon.
+- Bug 6522: Readd an inhibit.
+- Bug 6853: Port to libxfce4ui.
+- Bug 6069 6119 6120: Fixed possible NULL values.
+- The clipboard-manager from Gnome is back-ported inside xfce4-settings, still
+  this one has been tweaked.
+
+Version 1.1.3 - 2009-11-15
+
+- Fix empty clipboard when leaving Firefox (bug #5738)
+
+Version 1.1.2 - 2009-11-15
+
+- Clipboard manager rewrote on top of GTK+ functions. It takes also the primary
+  clipboard (mouse selections) into account.
+- Fix popup command not always working from keyboard shortcut (#bug 5909).
+- Update documentation.
+
+Version 1.1.1 - 2009-09-30
+
+- New option "Ignore selections" and dropped the option "Exclude from option"
+  that was bound to the "Sync selections". Now it is always possible to keep
+  the selections in the history (as it was the case in older version).
+- Note about the regex nature in the actions dialog being always anchored.
+
+Version 1.1.0 - 2009-09-03
+
+- Settings dialog is an external application xfce4-clipman-settings.  Optional
+  support for libunique to make the settings dialog unique.
+- Switched to GIO for file monitoring support over the actions XML file.
+  Minimum version requirement for glib bumped to 2.16.
+- The bundle "standalone app/panel plugin" is splitted in two binaries.
+- The autostart behavior has changed. Now when the standalone application is
+  launched the autostart file is automatically set to true, and when it is
+  dropped by the user it is set to false.
+- Added the daemon from gnome-settings-daemon, it keeps a copy of all targets
+  and replicates them to the clipboard before it is going empty.
+- Added groups into ClipmanActions identified by integers where -1 represents
+  all the groups. This makes it possible to retrieve only a set of actions. The
+  Clipman settings dialog has a new checkbox to retrieve actions only on manual
+  copies (e.g. Ctrl+C).
+- Fixed a bug with KDE where the status icon is getting smaller and smaller.
+
+Version 1.0.2 - 2009-06-28
+
+- Removed the inhibit option.
+- Set the desktop entry file to Only XFCE.
+- Do not consider text/html target as simple text.
+
+Version 1.0.1 - 2009-05-14
+
+- Renamed option "Add selections" to "Sync selections".
+- New option to ignore selections in the history.
+- If the plugin is running inside the notification area, ask the user if the
+  clipboard manager should be restarted on the next login when it gets removed.
+- Escape markups in action/commands in edit dialog.
+- Set OnlyShowIn in the desktop entry file for the menu.
+- Open the documentation in the user locale.
+- Mention xfce4-popup-clipman in the documentation.
+
+Version 1.0.0 - 2009-04-20
+
+- Major rewrite of the plugin using GObjects and Xfconf.
+- The external plugin is provided as a bundle, it can be added to the Xfce
+  Panel and executed as a standalone application living inside the notification
+  area. An item is installed inside the applications menu.
+- New feature "Actions" which brings the possibility to execute commands on
+  specific text selections by matching them against regexes.
+- Takes ownership over CLIPBOARD_MANAGER.
+- Documentation.
+
+Version 0.9.1 - 2009-03-30
+
+- Bug fix release
+
+Version 0.9.0 - 2009-01-15
+
+- A rewrite to make it more user-friendly and introduce image support. Work
+  done by David Collins.
+- Drop the repetitive timeout against a callback/signal to check for clipboard
+  changes.
