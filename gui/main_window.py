@@ -3,6 +3,8 @@ from tkinter import ttk, messagebox
 from typing import Dict, Any, Callable, Optional, List
 import json
 import os
+import time
+from datetime import datetime
 
 class EditOverlay:
     """A modal overlay for viewing and editing long snippets."""
@@ -49,6 +51,7 @@ class ClipmanPreviewPopup:
         self.current_idx = start_index
         self._bind_id = None
         self.transfer_callback = transfer_callback
+        self._original_content = ""  # for restore
 
         self.window = tk.Toplevel(parent)
         self.window.title("Clipman Preview")
@@ -73,6 +76,12 @@ class ClipmanPreviewPopup:
         tk.Button(header, text="✕", command=self.close,
                   bg='#c44', fg='white', font=('Arial', 10, 'bold'),
                   bd=0, padx=10, cursor='hand2').pack(side='right', padx=5, pady=5)
+
+        # Restore button
+        self.restore_btn = tk.Button(header, text="↺ Restore", command=self._restore,
+                                     bg='#555', fg='white', font=('Arial', 9, 'bold'),
+                                     bd=0, padx=8, cursor='hand2')
+        self.restore_btn.pack(side='right', padx=5, pady=5)
 
         # Mode toggle: Single vs Show All
         mode_frame = tk.Frame(header, bg='#333')
@@ -104,21 +113,25 @@ class ClipmanPreviewPopup:
                                   bg='#444', fg='white', font=('Arial', 9))
         self.next_btn.pack(side='left')
 
-        # Text area
+        # Text area — EDITABLE
         self.text = tk.Text(self.window, font=('Consolas', 10), wrap='word',
-                            bg='#1e1e1e', fg='#e0e0e0', padx=10, pady=10)
+                            bg='#1e1e1e', fg='#e0e0e0', padx=10, pady=10,
+                            undo=True)
         self.text.pack(fill='both', expand=True, padx=10, pady=(0, 5))
-        self.text.config(state='disabled')
 
-        # Transfer bar (slot spinbox + Transfer button)
+        # Transfer bar (slot entry + Transfer button)
         if self.transfer_callback:
             xfer_frame = tk.Frame(self.window, bg="#2b2b2b")
             xfer_frame.pack(fill='x', padx=10, pady=(0, 10))
             tk.Label(xfer_frame, text="Transfer to slot:", bg="#2b2b2b", fg="#aaa",
                      font=('Arial', 9)).pack(side='left')
-            self.xfer_spin = tk.Spinbox(xfer_frame, from_=1, to=30, width=4,
-                                        font=('Arial', 9, 'bold'))
-            self.xfer_spin.pack(side='left', padx=(5, 5))
+            self.xfer_entry = tk.Entry(xfer_frame, width=5, font=('Arial', 10, 'bold'),
+                                       justify='center')
+            self.xfer_entry.pack(side='left', padx=(5, 5))
+            self.xfer_entry.insert(0, "1")
+            self.xfer_entry.selection_range(0, 'end')
+            self.xfer_entry.focus_set()
+            self.xfer_entry.bind('<Return>', lambda e: self._do_transfer())
             tk.Button(xfer_frame, text="Transfer", command=self._do_transfer,
                       bg='#2a5a2a', fg='white', font=('Arial', 9, 'bold')).pack(side='left')
 
@@ -126,12 +139,19 @@ class ClipmanPreviewPopup:
         if not self.transfer_callback:
             return
         try:
-            slot = int(self.xfer_spin.get())
+            slot = int(self.xfer_entry.get())
         except ValueError:
             return
-        entry = self.entries[self.current_idx]
-        content = entry.decoded_content if hasattr(entry, 'decoded_content') else str(entry)
+        if slot < 1 or slot > 30:
+            return
+        content = self.text.get('1.0', 'end-1c')
         self.transfer_callback(slot, content)
+
+    def _restore(self):
+        """Restore text to original content."""
+        if self._original_content:
+            self.text.delete('1.0', 'end')
+            self.text.insert('1.0', self._original_content)
 
     def _bind_close(self):
         self.window.protocol("WM_DELETE_WINDOW", self.close)
@@ -163,11 +183,10 @@ class ClipmanPreviewPopup:
             return
         entry = self.entries[self.current_idx]
         content = entry.decoded_content if hasattr(entry, 'decoded_content') else str(entry)
+        self._original_content = content
 
-        self.text.config(state='normal')
         self.text.delete('1.0', 'end')
         self.text.insert('1.0', content)
-        self.text.config(state='disabled')
 
         self.title_label.config(text=f"Preview — Item {self.current_idx + 1} of {len(self.entries)}")
         self.counter_label.config(text=f"{self.current_idx + 1} / {len(self.entries)}")
@@ -176,14 +195,14 @@ class ClipmanPreviewPopup:
         self.next_btn.config(state='normal' if self.current_idx < len(self.entries) - 1 else 'disabled')
 
     def _show_all(self):
-        self.text.config(state='normal')
-        self.text.delete('1.0', 'end')
+        combined = []
         for i, entry in enumerate(self.entries):
             content = entry.decoded_content if hasattr(entry, 'decoded_content') else str(entry)
-            self.text.insert('end', f"{'='*40}  Item {i+1}  {'='*40}\n\n")
-            self.text.insert('end', content)
-            self.text.insert('end', "\n\n")
-        self.text.config(state='disabled')
+            combined.append(f"{'='*40}  Item {i+1}  {'='*40}\n\n{content}\n")
+        self._original_content = "\n\n".join(combined)
+
+        self.text.delete('1.0', 'end')
+        self.text.insert('end', self._original_content)
         self.title_label.config(text=f"Preview — All {len(self.entries)} Items")
 
     def _prev(self):
@@ -309,6 +328,7 @@ class MainWindow:
         self.preview_transfer_callback: Optional[Callable] = None
         self.one_per_line_callback: Optional[Callable] = None
         self.send_to_snippet_callback: Optional[Callable] = None
+        self.import_clipman_callback: Optional[Callable] = None
         self.orderly_submode_callback: Optional[Callable] = None
         self.slot_click_callback: Optional[Callable] = None
         self.orderly_paste_callback: Optional[Callable] = None
@@ -429,17 +449,35 @@ class MainWindow:
         self.slots_inner.bind("<Configure>", lambda e: self.slot_canvas.configure(scrollregion=self.slot_canvas.bbox("all")))
         self.root.bind_all("<MouseWheel>", self._on_mousewheel)
 
-        # 3. Snippets Panel — BOTTOM LEFT, directly under the 30 OG slots (as requested)
+        # 3. Snippets Panel — BOTTOM LEFT, scrollable, 50 snippets
         self.snippets_panel = tk.LabelFrame(left_vbox, text=" SNIPPETS (persistent) ", 
-                                            font=('Arial', 10, 'bold'), padx=5, pady=5)
+                                            font=('Arial', 10, 'bold'), padx=2, pady=2)
         self.snippets_panel.pack(side='bottom', fill='x', padx=2, pady=(6, 0))
 
+        # Scrollable canvas for 50 snippet rows
+        self.snippets_canvas = tk.Canvas(self.snippets_panel, height=160, bg='#f0f0f0', highlightthickness=0)
+        self.snippets_scrollbar = tk.Scrollbar(self.snippets_panel, orient='vertical', command=self.snippets_canvas.yview)
+        self.snippets_inner = tk.Frame(self.snippets_canvas, bg='#f0f0f0')
+
+        self.snippets_inner.bind('<Configure>', lambda e: self.snippets_canvas.configure(scrollregion=self.snippets_canvas.bbox('all')))
+        self.snippets_canvas.create_window((0, 0), window=self.snippets_inner, anchor='nw')
+        self.snippets_canvas.configure(yscrollcommand=self.snippets_scrollbar.set)
+
+        self.snippets_canvas.pack(side='left', fill='both', expand=True)
+        self.snippets_scrollbar.pack(side='right', fill='y')
+
+        # Bind mousewheel to scroll snippets when hovered
+        def _on_snippet_mousewheel(event):
+            self.snippets_canvas.yview_scroll(int(-1*(event.delta/120)), 'units')
+        self.snippets_canvas.bind('<Enter>', lambda e: self.snippets_canvas.bind_all('<MouseWheel>', _on_snippet_mousewheel))
+        self.snippets_canvas.bind('<Leave>', lambda e: self.snippets_canvas.unbind_all('<MouseWheel>'))
+
         self.snippet_entries: Dict[int, tk.Entry] = {}
-        for i in range(8):  # 8 quick snippets
-            row = tk.Frame(self.snippets_panel)
+        for i in range(50):
+            row = tk.Frame(self.snippets_inner, bg='#f0f0f0')
             row.pack(fill='x', pady=1)
 
-            tk.Label(row, text=f"S{i+1}:", font=('Consolas', 8, 'bold'), width=3).pack(side='left')
+            tk.Label(row, text=f"S{i+1:02d}:", font=('Consolas', 8, 'bold'), width=4, bg='#f0f0f0').pack(side='left')
 
             entry = tk.Entry(row, font=('Arial', 9), bd=1)
             entry.pack(side='left', fill='x', expand=True, padx=2)
@@ -538,6 +576,14 @@ class MainWindow:
         tk.Radiobutton(mode_toggle, text="Manual", variable=self.slot_mode_var,
                        value="manual", bg='#444', fg='white', selectcolor='#555',
                        font=('Arial', 7)).pack(side='left')
+
+        # Import from Clipman button
+        import_frame = tk.Frame(self.clipman_panel)
+        import_frame.pack(fill='x', pady=(0, 3))
+        import_btn = tk.Button(import_frame, text="Import from Clipman",
+                               command=self._on_import_clipman,
+                               bg='#3a3a5a', fg='#aaaaff', font=('Arial', 8, 'bold'))
+        import_btn.pack(fill='x', expand=True)
 
         clipman_inner = tk.Frame(self.clipman_panel)
         clipman_inner.pack(fill='both', expand=True)
@@ -652,15 +698,55 @@ class MainWindow:
         if hasattr(self, 'count_label'):
             self.count_label.configure(text=f"{total} entries")
 
+    @staticmethod
+    def _get_time_block(timestamp):
+        """Return 'July 23rd PM' from a unix timestamp. Returns '' if timestamp is 0/None."""
+        if not timestamp:
+            return ""
+        dt = datetime.fromtimestamp(timestamp)
+        month = dt.strftime("%B")
+        day = dt.day
+        ampm = "AM" if dt.hour < 12 else "PM"
+        if 11 <= day <= 13:
+            suffix = "th"
+        else:
+            suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+        return f"{month} {day}{suffix} {ampm}"
+
     def _update_clipman_page_display(self):
-        """Render only the current page into the listbox."""
+        """Render only the current page into the listbox with 12-hour time separators."""
         self.clipman_listbox.delete(0, tk.END)
+        self._clipman_row_to_entry = {}  # listbox row -> full entry index (or -1 for separators)
+        self._clipman_entry_to_row = {}  # full entry index -> listbox row
         start = self.clipman_current_page * self.clipman_page_size
         end = start + self.clipman_page_size
         page_entries = self.clipman_all_entries[start:end]
-        for e in page_entries:
+
+        last_block = None
+        if start > 0 and len(self.clipman_all_entries) > 0:
+            prev_entry = self.clipman_all_entries[start - 1]
+            prev_ts = getattr(prev_entry, 'time', 0)
+            last_block = self._get_time_block(prev_ts) if prev_ts else ""
+
+        row = 0
+        for i, e in enumerate(page_entries):
+            ts = getattr(e, 'time', 0)
+            block = self._get_time_block(ts) if ts else ""
+
+            if block and block != last_block:
+                sep = f"── {block} ──"
+                self.clipman_listbox.insert(tk.END, sep)
+                self.clipman_listbox.itemconfig(row, fg='#ff9966', bg='#2b2b2b')
+                self._clipman_row_to_entry[row] = -1
+                row += 1
+                last_block = block
+
             preview = e.preview if hasattr(e, 'preview') else str(e)[:80]
             self.clipman_listbox.insert(tk.END, preview)
+            entry_idx = start + i
+            self._clipman_row_to_entry[row] = entry_idx
+            self._clipman_entry_to_row[entry_idx] = row
+            row += 1
 
         total_pages = max(1, (len(self.clipman_all_entries) + self.clipman_page_size - 1) // self.clipman_page_size)
         self.clipman_page_label.config(text=f"Page {self.clipman_current_page + 1}/{total_pages}")
@@ -680,10 +766,15 @@ class MainWindow:
             self._update_clipman_page_display()
 
     def _get_clipman_selected_full_indices(self):
-        """Map listbox selection indices to full entry list indices."""
+        """Map listbox selection indices to full entry list indices. Skips separators."""
         listbox_indices = self.clipman_listbox.curselection()
-        start = self.clipman_current_page * self.clipman_page_size
-        return [start + i for i in listbox_indices]
+        mapping = getattr(self, '_clipman_row_to_entry', {})
+        result = []
+        for lb_idx in listbox_indices:
+            entry_idx = mapping.get(lb_idx)
+            if entry_idx is not None and entry_idx >= 0:
+                result.append(entry_idx)
+        return result
 
     def _on_clipman_double_click(self, event=None):
         """Double-click: show preview popup for selected entries."""
@@ -725,10 +816,10 @@ class MainWindow:
             return
         self.locked_groups.append(full_indices)
         # Visual feedback - mark locked items on current page
-        start = self.clipman_current_page * self.clipman_page_size
+        entry_to_row = getattr(self, '_clipman_entry_to_row', {})
         for idx in full_indices:
-            if start <= idx < start + self.clipman_page_size:
-                lb_idx = idx - start
+            lb_idx = entry_to_row.get(idx)
+            if lb_idx is not None:
                 current_text = self.clipman_listbox.get(lb_idx)
                 if not current_text.startswith("[LOCKED]"):
                     self.clipman_listbox.delete(lb_idx)
@@ -760,13 +851,24 @@ class MainWindow:
         self._update_clipman_page_display()
 
     def _on_transfer_one_slot_per_line(self):
-        """Transfer selected entries, one per slot (sequential with wrap)."""
+        """Transfer selected entries, one per slot. Prompts for starting slot."""
         if not self.one_per_line_callback:
             return
         all_items = self._get_all_selected_entries()
         if not all_items:
             return
-        start_slot = self.manual_start_slot if (self.slot_mode_var.get() == "manual" and self.manual_start_slot) else 1
+
+        from tkinter import simpledialog
+        start_slot = simpledialog.askinteger(
+            "1 Slot Per Line — Starting Slot",
+            f"{len(all_items)} lines selected.\n\n"
+            "Enter starting slot number (1-30):\n"
+            "Press OK to start at slot 1.",
+            minvalue=1, maxvalue=30, initialvalue=1
+        )
+        if start_slot is None:
+            return  # user cancelled
+
         self.one_per_line_callback(all_items, start_slot)
         self.locked_groups = []
         self._update_clipman_page_display()
@@ -826,6 +928,63 @@ class MainWindow:
         if content and self.copy_to_clipboard_callback:
             self.copy_to_clipboard_callback(content, f"Snippet S{idx+1}")
 
+    def show_snippet_picker(self):
+        """Popup listing all non-empty snippets. Click one to copy to clipboard."""
+        popup = tk.Toplevel(self.root)
+        popup.title("Snippet Picker")
+        popup.geometry("500x400")
+        popup.configure(bg="#2b2b2b")
+        popup.transient(self.root)
+        popup.grab_set()
+
+        tk.Label(popup, text="Snippet Picker — click to copy, Esc to close",
+                 font=('Arial', 10, 'bold'), fg='white', bg='#2b2b2b').pack(pady=(10, 5))
+
+        listbox = tk.Listbox(popup, font=('Consolas', 10), bg='#1e1e1e', fg='#e0e0e0',
+                             selectmode='single', activestyle='none')
+        listbox.pack(fill='both', expand=True, padx=10, pady=(0, 5))
+
+        scrollbar = tk.Scrollbar(listbox, orient='vertical', command=listbox.yview)
+        listbox.configure(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side='right', fill='y')
+
+        # Populate with non-empty snippets
+        snippet_index_map = []
+        for i in range(50):
+            entry = self.snippet_entries.get(i)
+            if entry:
+                content = entry.get().strip()
+                if content:
+                    preview = content[:80].replace('\n', ' ')
+                    listbox.insert(tk.END, f"S{i+1:02d}: {preview}")
+                    snippet_index_map.append(i)
+
+        def on_select(event=None):
+            sel = listbox.curselection()
+            if sel and self.copy_to_clipboard_callback:
+                idx = snippet_index_map[sel[0]]
+                content = self.snippet_entries[idx].get()
+                self.copy_to_clipboard_callback(content, f"Snippet S{idx+1}")
+                popup.destroy()
+
+        def on_key(event):
+            if event.keysym == 'Escape':
+                popup.destroy()
+            elif event.keysym == 'Return':
+                on_select()
+
+        listbox.bind('<Double-Button-1>', on_select)
+        listbox.bind('<Return>', on_select)
+        popup.bind('<Key>', on_key)
+        popup.bind('<Escape>', lambda e: popup.destroy())
+
+        if snippet_index_map:
+            listbox.selection_set(0)
+            listbox.focus_set()
+        else:
+            listbox.insert(tk.END, "(no snippets saved yet)")
+            listbox.config(fg='#666')
+
     def _on_copy_history_selected(self):
         all_items = self._get_all_selected_entries()
         if not all_items:
@@ -835,6 +994,7 @@ class MainWindow:
         content = item.decoded_content if hasattr(item, 'decoded_content') else str(item)
         if content and self.copy_to_clipboard_callback:
             self.copy_to_clipboard_callback(content, "History")
+            self._toast(f"Copied to clipboard ({len(content)} chars)")
         self.locked_groups = []
         self._update_clipman_page_display()
 
@@ -855,6 +1015,50 @@ class MainWindow:
             self.vault_panel.pack_forget()
         except:
             pass
+
+    def _on_import_clipman(self):
+        """Show dialog to import entries from XFCE Clipman's textsrc into the hybrid history."""
+        if not self.import_clipman_callback:
+            return
+
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Import from Clipman")
+        dialog.geometry("320x220")
+        dialog.configure(bg="#2b2b2b")
+        dialog.transient(self.root)
+        dialog.grab_set()
+
+        tk.Label(dialog, text="How many recent entries to import?",
+                 font=('Arial', 10, 'bold'), fg='white', bg='#2b2b2b').pack(pady=(15, 10))
+
+        choice_var = tk.StringVar(value="50")
+
+        presets = [("50 (quick catch-up)", "50"),
+                   ("100", "100"),
+                   ("200", "200"),
+                   ("500", "500"),
+                   ("All (may be slow)", "9999")]
+
+        for label, val in presets:
+            tk.Radiobutton(dialog, text=label, variable=choice_var, value=val,
+                           bg='#2b2b2b', fg='white', selectcolor='#555',
+                           font=('Arial', 9)).pack(anchor='w', padx=20, pady=2)
+
+        def do_import():
+            try:
+                count = int(choice_var.get())
+            except ValueError:
+                count = 50
+            dialog.destroy()
+            self.import_clipman_callback(count)
+
+        tk.Button(dialog, text="Import", command=do_import,
+                  bg='#3a3a5a', fg='#aaaaff', font=('Arial', 10, 'bold'),
+                  padx=20, pady=5).pack(pady=(10, 5))
+
+        tk.Button(dialog, text="Cancel", command=dialog.destroy,
+                  bg='#555', fg='white', font=('Arial', 9),
+                  padx=20).pack(pady=(0, 10))
 
     def _on_send_to_snippet(self):
         if not self.send_to_snippet_callback:
@@ -896,6 +1100,9 @@ class MainWindow:
 
     def set_send_to_snippet_callback(self, callback: Callable):
         self.send_to_snippet_callback = callback
+
+    def set_import_clipman_callback(self, callback: Callable):
+        self.import_clipman_callback = callback
 
     def set_orderly_submode_callback(self, callback: Callable):
         self.orderly_submode_callback = callback

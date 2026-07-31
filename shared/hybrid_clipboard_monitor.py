@@ -35,6 +35,7 @@ class MonitorEntry:
         self.decoded_content = data.get("content", "")
         self.preview = data.get("preview", "")[:80]
         self.word_count = len(self.decoded_content.split())
+        self.time = data.get("time", 0)  # unix timestamp, 0 if unknown
 
     @property
     def is_empty(self) -> bool:

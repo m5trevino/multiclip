@@ -221,10 +221,81 @@ class MultiClipV2:
             if len(entries) == 0:
                 print("[CLIPMAN] NOTE: No history yet. Copy some text to populate the panel.")
 
+            # Wire import-from-clipman callback
+            if hasattr(self.ui, "set_import_clipman_callback"):
+                self.ui.set_import_clipman_callback(self.backfill_from_clipman)
+
+            # Auto-backfill missed copies from Clipman on startup
+            self.backfill_from_clipman(50, silent=True)
+
         except Exception as e:
             print(f"Could not wire Clipman panel: {e}")
             import traceback
             traceback.print_exc()
+
+    def backfill_from_clipman(self, max_entries: int = 50, silent: bool = False):
+        """Pull recent entries from XFCE Clipman's textsrc and merge into hybrid monitor history.
+        Deduplicates by content hash against existing history."""
+        try:
+            from shared.clipman_parser import ClipmanParser
+        except Exception:
+            if not silent:
+                print("[BACKFILL] ClipmanParser not available")
+            return 0
+
+        parser = ClipmanParser()
+        clipman_entries = parser.parse(max_entries=max_entries)
+        if not clipman_entries:
+            if not silent:
+                print("[BACKFILL] No clipman entries found")
+            return 0
+
+        # Build set of existing content hashes
+        existing_hashes = set()
+        if hasattr(self, 'clipboard_monitor') and self.clipboard_monitor:
+            with self.clipboard_monitor.lock:
+                for entry in self.clipboard_monitor.history:
+                    content = entry.get("content", "")
+                    if content:
+                        existing_hashes.add(hashlib.md5(content.encode()).hexdigest())
+
+        # Merge new entries
+        added = 0
+        for ce in reversed(clipman_entries):  # oldest first so newest ends up at front
+            content = ce.decoded_content if hasattr(ce, 'decoded_content') else str(ce)
+            if not content.strip():
+                continue
+            content_hash = hashlib.md5(content.encode()).hexdigest()
+            if content_hash in existing_hashes:
+                continue
+
+            entry = {
+                "id": len(self.clipboard_monitor.history) + 1,
+                "time": time.time() - (added * 0.1),  # approximate stagger
+                "source": "clipman-import",
+                "content": content,
+                "preview": content[:80].replace("\n", " "),
+                "length": len(content),
+            }
+            with self.clipboard_monitor.lock:
+                self.clipboard_monitor.history.insert(0, entry)
+            existing_hashes.add(content_hash)
+            added += 1
+
+        if added > 0:
+            self.clipboard_monitor._save()
+            # Refresh UI
+            if hasattr(self.ui, "set_clipman_entries"):
+                entries = self.clipboard_monitor.parse(max_entries=9999)
+                self.ui.set_clipman_entries(entries)
+            if not silent:
+                print(f"[BACKFILL] Imported {added} new entries from Clipman")
+                self.show_toast("Clipman Import", f"{added} entries imported from Clipman history")
+        else:
+            if not silent:
+                print("[BACKFILL] No new entries to import")
+
+        return added
 
     def _transfer_clipman_to_og_slots(self, selected_entries, start_slot=None):
         """Smart transfer per user spec.
@@ -324,7 +395,7 @@ class MultiClipV2:
             return
         sent = 0
         for content in contents:
-            for i in range(8):
+            for i in range(50):
                 entry = self.ui.snippet_entries.get(i)
                 if entry and not entry.get().strip():
                     entry.delete(0, 'end')
@@ -575,6 +646,22 @@ class MultiClipV2:
         if not content:
             print(f"[PASTE] Slot {slot_num} is empty")
             return
+        self._paste_content(content, f"PASTE SLOT {slot_num:02d}", slot_num)
+
+    def paste_from_snippet(self, snippet_idx: int):
+        """Paste a snippet with the same xdotool/pyautogui Ctrl+V fallback."""
+        if not hasattr(self.ui, "snippet_entries"):
+            return
+        entry = self.ui.snippet_entries.get(snippet_idx - 1)
+        if not entry:
+            return
+        content = entry.get()
+        if not content:
+            print(f"[PASTE] Snippet {snippet_idx} is empty")
+            return
+        self._paste_content(content, f"PASTE SNIPPET S{snippet_idx}", snippet_idx)
+
+    def _paste_content(self, content: str, label: str, idx: int):
         try:
             pyperclip.copy(content)
             time.sleep(0.12)
@@ -603,11 +690,9 @@ class MultiClipV2:
                     pyautogui.hotkey("ctrl", "v")
 
             method = "xdotool" if used_xdotool else "pyautogui"
-            print(f"[PASTE] Slot {slot_num}  (via {method})")
-
             preview = content[:80].replace("\n", " ")
-            title = f"RIGHT COMBO → PASTE SLOT {slot_num:02d}"
-            self.show_toast(title, preview)
+            print(f"[PASTE] {label} (via {method})")
+            self.show_toast(label, preview)
         except Exception as e:
             print(f"[PASTE ERROR] {e}")
 
@@ -624,7 +709,9 @@ class MultiClipV2:
         def on_press(key):
             try:
                 k = str(key).lower()
-                if 'ctrl_r' in k:
+                if 'shift' in k:
+                    self.held_mods.add('shift')
+                elif 'ctrl_r' in k:
                     self.held_mods.add('ctrl_r')
                 elif 'ctrl_l' in k:
                     self.held_mods.add('ctrl_l')
@@ -641,12 +728,16 @@ class MultiClipV2:
                         digit = key.char
                         slot = 10 if digit == '0' else int(digit)
                         self._handle_combo(slot)
+                    elif hasattr(key, 'char') and key.char and key.char.lower() == 'f':
+                        self._handle_snippet_picker()
             except Exception as e:
                 print(f"hotkey press err: {e}")
 
         def on_release(key):
             try:
                 k = str(key).lower()
+                if 'shift' in k:
+                    self.held_mods.discard('shift')
                 if 'ctrl_r' in k:
                     self.held_mods.discard('ctrl_r')
                 elif 'ctrl_l' in k:
@@ -664,10 +755,11 @@ class MultiClipV2:
 
         self.listener = pkb.Listener(on_press=on_press, on_release=on_release)
         self.listener.start()
-        print("HOTKEYS: LCtrl+LAlt = copy  |  RCtrl+RAlt = paste")
+        print("HOTKEYS: LCtrl+LAlt = copy slot  |  RCtrl+RAlt = paste slot  |  RCtrl+RAlt+F = snippet picker")
 
     def _handle_combo(self, slot: int):
         mods = self.held_mods
+        has_shift = 'shift' in mods
         has_right = ('ctrl_r' in mods or 'alt_r' in mods)
         has_left = ('ctrl_l' in mods or 'alt_l' in mods)
         has_generic = ('ctrl' in mods and 'alt' in mods)
@@ -675,9 +767,22 @@ class MultiClipV2:
         if has_right and ('ctrl_r' in mods or 'ctrl' in mods) and ('alt_r' in mods or 'alt' in mods):
             print(f"[HOTKEY] Right combo → PASTE slot {slot}")
             self.paste_from_slot(slot)
+        elif (has_left or has_generic) and has_shift:
+            if 1 <= slot <= 50:
+                print(f"[HOTKEY] Left+Shift combo → PASTE snippet {slot}")
+                self.paste_from_snippet(slot)
         elif has_left or has_generic:
             print(f"[HOTKEY] Left combo → COPY slot {slot}")
             self.add_to_slot(slot)
+
+    def _handle_snippet_picker(self):
+        """Show snippet picker when RCtrl+RAlt+F is pressed."""
+        mods = self.held_mods
+        has_right = ('ctrl_r' in mods or 'alt_r' in mods)
+        if has_right and ('ctrl_r' in mods or 'ctrl' in mods) and ('alt_r' in mods or 'alt' in mods):
+            print("[HOTKEY] Right combo+F → Snippet Picker")
+            if hasattr(self.ui, 'show_snippet_picker'):
+                self.ui.show_snippet_picker()
 
     def run(self):
         if not USE_OLD_UI and hasattr(self, 'root'):
